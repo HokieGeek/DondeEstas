@@ -1,12 +1,21 @@
 package net.hokiegeek.android.whereareyou;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.Toast;
+import android.widget.ZoomControls;
+import android.support.annotation.NonNull;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,15 +33,29 @@ import com.google.android.gms.maps.model.MarkerOptions;
  * Use the {@link MapFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MapFragment extends Fragment implements OnMapReadyCallback {
+public class MapFragment extends Fragment
+        implements OnMapReadyCallback,
+                   ActivityCompat.OnRequestPermissionsResultCallback
+{
     private MapView mapView;
     private GoogleMap map;
 
+    /**
+     * Request code for location permission request.
+     *
+     * @see #onRequestPermissionsResult(int, String[], int[])
+     */
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+
+    /**
+     * Flag indicating whether a requested permission has been denied after returning in
+     * {@link #onRequestPermissionsResult(int, String[], int[])}.
+     */
+    private boolean mPermissionDenied = false;
+
     private OnFragmentInteractionListener mListener;
 
-    public MapFragment() {
-        // Required empty public constructor
-    }
+    public MapFragment() { }
 
     /**
      * Use this factory method to create a new instance of
@@ -96,21 +119,30 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         this.map = map;
 
         try {
-            map.getUiSettings().setMyLocationButtonEnabled(true);
+            // map.getUiSettings().setMyLocationButtonEnabled(true);
             map.getUiSettings().setZoomControlsEnabled(true);
-            map.setMyLocationEnabled(true);
+            enableMyLocation();
+
+            /*
+            FrameLayout.LayoutParams zoomParams = new FrameLayout.LayoutParams(
+                    LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+            ZoomControls controlls = (ZoomControls) map.getZoomButtonsController().getZoomControls();
+            controlls.setGravity(Gravity.TOP);
+            controlls.setLayoutParams(zoomParams);
+            */
 
             // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
             MapsInitializer.initialize(this.getActivity());
 
             // Updates the location and zoom of the MapView
-            LatLng temp = new LatLng(39.188622,-77.287454);
-            map.addMarker(new MarkerOptions().position(temp));
+            // LatLng temp = new LatLng(-34,151);
+            /*
+            LatLng temp = new LatLng(39.1888622,-77.287454);
+            map.addMarker(new MarkerOptions().position(temp).title("Works?"));
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(temp, 10));
+            */
         } catch (SecurityException e) {
             e.printStackTrace();
-        // } catch (GooglePlayServicesNotAvailableException e) {
-        //    e.printStackTrace();
         }
     }
 
@@ -156,8 +188,59 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         super.onSaveInstanceState(outState);
         if (mapView != null) {
             mapView.onSaveInstanceState(outState);
+        }
     }
-}
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+            @NonNull int[] grantResults) {
+        if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
+            return;
+        }
+
+
+        for (int i = 0; i < permissions.length; i++) {
+            if (Manifest.permission.ACCESS_FINE_LOCATION.equals(permissions[i])) {
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    enableMyLocation();
+                } else {
+                    mPermissionDenied = true;
+                }
+                break;
+            }
+        }
+
+        /*
+        if (PermissionUtils.isPermissionGranted(permissions, grantResults,
+                Manifest.permission.ACCESS_FINE_LOCATION)) {
+            // Enable the my location layer if the permission has been granted.
+            enableMyLocation();
+        } else {
+            // Display the missing permission error dialog when the fragments resume.
+            mPermissionDenied = true;
+        }
+        */
+    }
+
+    /**
+     * Enables the My Location layer if the fine location permission has been granted.
+     */
+    private void enableMyLocation() {
+        if (ContextCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            Toast.makeText(this.getContext(), "No permissions!", Toast.LENGTH_SHORT).show();
+            // Permission to access the location is missing.
+            ActivityCompat.requestPermissions(this.getActivity(),
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE);
+            // PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE,
+            //         Manifest.permission.ACCESS_FINE_LOCATION, true);
+        } else if (map != null) {
+            // Access to the location has been granted to the app.
+            map.setMyLocationEnabled(true);
+        }
+    }
 
     /**
      * This interface must be implemented by activities that contain this
