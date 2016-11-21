@@ -25,6 +25,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.Vector;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -239,6 +241,15 @@ public class MapFragment extends Fragment
         } else if (map != null) {
             // Access to the location has been granted to the app.
             map.setMyLocationEnabled(true);
+        }
+    }
+
+    public void updateMarkers(Vector<MarkerOptions> markers) {
+        if (!markers.isEmpty()) {
+            map.clear();
+            for (MarkerOptions mark : markers) {
+                map.addMarker(mark);
+            }
         }
     }
 
