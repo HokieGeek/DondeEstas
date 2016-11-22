@@ -1,13 +1,13 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context="net.hokiegeek.android.whereareyou.MapFragment">
 
     <com.google.android.gms.maps.MapView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:clickable="true"
         android:id="@+id/mapView" />
 
@@ -16,9 +16,12 @@
         android:layout_height="wrap_content"
         android:layout_margin="6dp"
         android:clickable="true"
-        app:fabSize="mini"
+        app:fabSize="normal"
         app:srcCompat="@android:drawable/ic_menu_compass"
         android:id="@+id/fabFitMarkers"
-        app:backgroundTint="@android:color/holo_green_dark" />
-
-</FrameLayout>
+        app:backgroundTint="@android:color/holo_green_dark"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:hapticFeedbackEnabled="true" />
+</RelativeLayout>
