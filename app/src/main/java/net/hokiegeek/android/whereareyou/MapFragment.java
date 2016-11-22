@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -89,6 +90,13 @@ public class MapFragment extends Fragment
 
         // Gets to GoogleMap from the MapView and does initialization stuff
         mapView.getMapAsync(this);
+
+        FloatingActionButton myFab = (FloatingActionButton) v.findViewById(R.id.fabFitMarkers);
+        myFab.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                zoomToMarkers();
+            }
+         });
 
         return v;
     }
@@ -240,8 +248,7 @@ public class MapFragment extends Fragment
                 LatLngBounds bounds = builder.build();
                 // Then obtain a movement description object by using the factory: CameraUpdateFactory:
 
-                int padding = 0; // offset from edges of the map in pixels
-                cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+                cu = CameraUpdateFactory.newLatLngBounds(bounds, 190); // Number == padding in pixels
             }
             map.animateCamera(cu);
         }

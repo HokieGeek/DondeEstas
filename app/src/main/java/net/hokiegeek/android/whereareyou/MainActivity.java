@@ -98,7 +98,9 @@ public class MainActivity extends AppCompatActivity implements MapFragment.OnFra
         if (fragment instanceof MapFragment) {
             MapFragment mf = (MapFragment) fragment;
             Vector<MarkerOptions> markers = new Vector<>();
-            markers.add(new MarkerOptions().position(new LatLng(39.1888622, -77.287454)).title("Testing"));
+            markers.add(new MarkerOptions().position(new LatLng(38.975095, -77.195674)).title("Andres"));
+            markers.add(new MarkerOptions().position(new LatLng(39.1888622, -77.287454)).title("Olivia").snippet("Exploring"));
+            markers.add(new MarkerOptions().position(new LatLng(39.189658, -77.279528)).title("Keri"));
 
             mf.updateMarkers(markers);
             mf.zoomToMarkers();
