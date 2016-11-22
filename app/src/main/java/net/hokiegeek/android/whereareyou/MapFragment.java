@@ -8,21 +8,22 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.Toast;
-import android.widget.ZoomControls;
 import android.support.annotation.NonNull;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.Vector;
@@ -39,8 +40,12 @@ public class MapFragment extends Fragment
         implements OnMapReadyCallback,
                    ActivityCompat.OnRequestPermissionsResultCallback
 {
+    private static final String TAG = "WAY";
+
     private MapView mapView;
     private GoogleMap map;
+
+    private Vector<Marker> markers;
 
     /**
      * Request code for location permission request.
@@ -49,15 +54,11 @@ public class MapFragment extends Fragment
      */
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
-    /**
-     * Flag indicating whether a requested permission has been denied after returning in
-     * {@link #onRequestPermissionsResult(int, String[], int[])}.
-     */
-    private boolean mPermissionDenied = false;
+    private OnFragmentLoadedListener mLoadedListener;
 
-    private OnFragmentInteractionListener mListener;
-
-    public MapFragment() { }
+    public MapFragment() {
+        markers = new Vector<>();
+    }
 
     /**
      * Use this factory method to create a new instance of
@@ -92,28 +93,21 @@ public class MapFragment extends Fragment
         return v;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnFragmentLoadedListener) {
+            mLoadedListener = (OnFragmentLoadedListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnFragmentLoadedListener");
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        mLoadedListener = null;
     }
 
     @Override
@@ -121,28 +115,12 @@ public class MapFragment extends Fragment
         this.map = map;
 
         try {
-            // map.getUiSettings().setMyLocationButtonEnabled(true);
-            map.getUiSettings().setZoomControlsEnabled(true);
             enableMyLocation();
-
-            /*
-            FrameLayout.LayoutParams zoomParams = new FrameLayout.LayoutParams(
-                    LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
-            ZoomControls controlls = (ZoomControls) map.getZoomButtonsController().getZoomControls();
-            controlls.setGravity(Gravity.TOP);
-            controlls.setLayoutParams(zoomParams);
-            */
 
             // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
             MapsInitializer.initialize(this.getActivity());
 
-            // Updates the location and zoom of the MapView
-            // LatLng temp = new LatLng(-34,151);
-            /*
-            LatLng temp = new LatLng(39.1888622,-77.287454);
-            map.addMarker(new MarkerOptions().position(temp).title("Works?"));
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(temp, 10));
-            */
+            mLoadedListener.onFragmentLoaded(this);
         } catch (SecurityException e) {
             e.printStackTrace();
         }
@@ -151,6 +129,7 @@ public class MapFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
+        android.util.Log.v(TAG, "onResume()");
         if (mapView != null) {
             mapView.onResume();
         }
@@ -158,6 +137,7 @@ public class MapFragment extends Fragment
 
     @Override
     public void onPause() {
+        android.util.Log.v(TAG, "onPause()");
         if (mapView != null) {
             mapView.onPause();
         }
@@ -200,28 +180,20 @@ public class MapFragment extends Fragment
             return;
         }
 
-
+        boolean permissionDenied = true;
         for (int i = 0; i < permissions.length; i++) {
             if (Manifest.permission.ACCESS_FINE_LOCATION.equals(permissions[i])) {
                 if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                     enableMyLocation();
-                } else {
-                    mPermissionDenied = true;
+                    permissionDenied = false;
                 }
                 break;
             }
         }
 
-        /*
-        if (PermissionUtils.isPermissionGranted(permissions, grantResults,
-                Manifest.permission.ACCESS_FINE_LOCATION)) {
-            // Enable the my location layer if the permission has been granted.
-            enableMyLocation();
-        } else {
-            // Display the missing permission error dialog when the fragments resume.
-            mPermissionDenied = true;
+        if (permissionDenied) {
+            Toast.makeText(this.getContext(), "Did not receive permissions.", Toast.LENGTH_LONG);
         }
-        */
     }
 
     /**
@@ -236,35 +208,46 @@ public class MapFragment extends Fragment
             ActivityCompat.requestPermissions(this.getActivity(),
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     LOCATION_PERMISSION_REQUEST_CODE);
-            // PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE,
-            //         Manifest.permission.ACCESS_FINE_LOCATION, true);
         } else if (map != null) {
             // Access to the location has been granted to the app.
+            map.getUiSettings().setMyLocationButtonEnabled(true);
             map.setMyLocationEnabled(true);
         }
     }
 
-    public void updateMarkers(Vector<MarkerOptions> markers) {
-        if (!markers.isEmpty()) {
+    public void updateMarkers(Vector<MarkerOptions> markerOptions) {
+        Log.v(TAG, "updateMarkers()");
+        if (!markerOptions.isEmpty()) {
             map.clear();
-            for (MarkerOptions mark : markers) {
-                map.addMarker(mark);
+            markers.clear();
+            for (MarkerOptions mark : markerOptions) {
+                markers.add(map.addMarker(mark));
             }
         }
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    public void zoomToMarkers() {
+        Log.v(TAG, "zoomToMarkers()");
+        if (!markers.isEmpty()) {
+            CameraUpdate cu;
+            if (markers.size() == 1) {
+                cu = CameraUpdateFactory.newLatLngZoom(markers.get(0).getPosition(), 10);
+            } else {
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                for (Marker marker : markers) {
+                    builder.include(marker.getPosition());
+                }
+                LatLngBounds bounds = builder.build();
+                // Then obtain a movement description object by using the factory: CameraUpdateFactory:
+
+                int padding = 0; // offset from edges of the map in pixels
+                cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+            }
+            map.animateCamera(cu);
+        }
+    }
+
+    public interface OnFragmentLoadedListener {
+        void onFragmentLoaded(Fragment fragment);
     }
 }

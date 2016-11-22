@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,8 +20,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements MapFragment.OnFragmentInteractionListener {
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.Vector;
+
+public class MainActivity extends AppCompatActivity implements MapFragment.OnFragmentLoadedListener {
+
+    private static final String TAG = "WAY";
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -36,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements MapFragment.OnFra
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+
+    private MapFragment mapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,18 +65,6 @@ public class MainActivity extends AppCompatActivity implements MapFragment.OnFra
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-
-        /*
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        */
-
     }
 
 
@@ -85,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements MapFragment.OnFra
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            // TODO: allow to input your username key
             return true;
         }
 
@@ -92,8 +92,17 @@ public class MainActivity extends AppCompatActivity implements MapFragment.OnFra
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
-        // TODO
+    public void onFragmentLoaded(Fragment fragment) {
+        Log.v(TAG, "onFragmentLoaded");
+
+        if (fragment instanceof MapFragment) {
+            MapFragment mf = (MapFragment) fragment;
+            Vector<MarkerOptions> markers = new Vector<>();
+            markers.add(new MarkerOptions().position(new LatLng(39.1888622, -77.287454)).title("Testing"));
+
+            mf.updateMarkers(markers);
+            mf.zoomToMarkers();
+        }
     }
 
     /**
@@ -126,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements MapFragment.OnFra
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            textView.setText("BLAH");
             return rootView;
         }
     }
@@ -143,13 +152,10 @@ public class MainActivity extends AppCompatActivity implements MapFragment.OnFra
 
         @Override
         public Fragment getItem(int position) {
-            // android.util.Log.v("BLAh:", "adasda");
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position) {
                 case 0:
-                    return MapFragment.newInstance();
-                    // return PlaceholderFragment.newInstance(position);
+                    mapFragment = MapFragment.newInstance();
+                    return mapFragment;
                 case 1:
                     return PlaceholderFragment.newInstance(position * 10);
             }
