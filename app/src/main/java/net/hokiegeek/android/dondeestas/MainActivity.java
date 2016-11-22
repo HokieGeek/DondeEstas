@@ -1,4 +1,4 @@
-package net.hokiegeek.android.whereareyou;
+package net.hokiegeek.android.dondeestas;
 
 import android.net.Uri;
 import android.support.design.widget.TabLayout;

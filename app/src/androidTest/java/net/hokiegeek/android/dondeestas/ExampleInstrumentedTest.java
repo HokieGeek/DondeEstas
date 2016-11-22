@@ -1,4 +1,4 @@
-package net.hokiegeek.android.whereareyou;
+package net.hokiegeek.android.dondeestas;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("net.hokiegeek.android.whereareyou", appContext.getPackageName());
+        assertEquals("net.hokiegeek.android.dondeestas", appContext.getPackageName());
     }
 }

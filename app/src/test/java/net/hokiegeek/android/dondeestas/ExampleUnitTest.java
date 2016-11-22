@@ -1,4 +1,4 @@
-package net.hokiegeek.android.whereareyou;
+package net.hokiegeek.android.dondeestas;
 
 import org.junit.Test;
 

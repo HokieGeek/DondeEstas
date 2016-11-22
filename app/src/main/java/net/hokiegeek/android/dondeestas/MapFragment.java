@@ -1,4 +1,4 @@
-package net.hokiegeek.android.whereareyou;
+package net.hokiegeek.android.dondeestas;
 
 import android.Manifest;
 import android.content.Context;
