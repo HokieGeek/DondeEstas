@@ -1,9 +1,6 @@
 package net.hokiegeek.android.dondeestas;
 
-import android.net.Uri;
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -20,14 +17,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import net.hokiegeek.android.dondeestas.dummy.DummyContent;
+
 import java.util.Vector;
 
-public class MainActivity extends AppCompatActivity implements MapFragment.OnFragmentLoadedListener {
+public class MainActivity extends AppCompatActivity
+        implements
+        MapFragment.OnFragmentLoadedListener,
+        PersonFragment.OnListFragmentInteractionListener
+{
 
     private static final String TAG = "WAY";
 
@@ -107,39 +109,10 @@ public class MainActivity extends AppCompatActivity implements MapFragment.OnFra
         }
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        public PlaceholderFragment() {
-        }
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText("BLAH");
-            return rootView;
-        }
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+        Log.v(TAG, "onListFragmentInteraction");
+        // TODO: what is this good for?
     }
 
     /**
@@ -159,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements MapFragment.OnFra
                     mapFragment = MapFragment.newInstance();
                     return mapFragment;
                 case 1:
-                    return PlaceholderFragment.newInstance(position * 10);
+                    return PersonFragment.newInstance(1);
             }
             return null;
         }
