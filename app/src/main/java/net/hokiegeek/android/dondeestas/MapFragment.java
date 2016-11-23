@@ -41,7 +41,7 @@ public class MapFragment extends Fragment
         implements OnMapReadyCallback,
                    ActivityCompat.OnRequestPermissionsResultCallback
 {
-    private static final String TAG = "WAY";
+    private static final String TAG = "DONDE";
 
     private MapView mapView;
     private GoogleMap map;
@@ -137,7 +137,6 @@ public class MapFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        android.util.Log.v(TAG, "onResume()");
         if (mapView != null) {
             mapView.onResume();
         }
@@ -145,7 +144,6 @@ public class MapFragment extends Fragment
 
     @Override
     public void onPause() {
-        android.util.Log.v(TAG, "onPause()");
         if (mapView != null) {
             mapView.onPause();
         }
@@ -159,7 +157,6 @@ public class MapFragment extends Fragment
                 mapView.onDestroy();
             } catch (NullPointerException e) {
                 e.printStackTrace();
-                // Log.e(TAG, "Error while attempting MapView.onDestroy(), ignoring exception", e);
             }
         }
         super.onDestroy();

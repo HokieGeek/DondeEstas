@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity
         PersonFragment.OnListFragmentInteractionListener
 {
 
-    private static final String TAG = "WAY";
+    private static final String TAG = "DONDE";
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -49,6 +50,8 @@ public class MainActivity extends AppCompatActivity
     private ViewPager mViewPager;
 
     private MapFragment mapFragment;
+
+    private PersonFragment personFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +71,6 @@ public class MainActivity extends AppCompatActivity
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -112,7 +114,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(DummyContent.DummyItem item) {
         Log.v(TAG, "onListFragmentInteraction");
-        // TODO: what is this good for?
+        Toast.makeText(this, item.toString(), Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -129,10 +131,9 @@ public class MainActivity extends AppCompatActivity
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    mapFragment = MapFragment.newInstance();
-                    return mapFragment;
+                    return (mapFragment = MapFragment.newInstance());
                 case 1:
-                    return PersonFragment.newInstance(1);
+                    return (personFragment = PersonFragment.newInstance(1));
             }
             return null;
         }
@@ -146,9 +147,9 @@ public class MainActivity extends AppCompatActivity
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Map";
+                    return getString(R.string.tab_name_map);
                 case 1:
-                    return "People";
+                    return getString(R.string.tab_name_following);
             }
             return null;
         }
