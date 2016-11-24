@@ -20,7 +20,7 @@ public class DummyDataSource implements DataSource {
         listeners = new ArrayList<>();
     }
 
-    public DummyDataSource newInstance() {
+    public static DummyDataSource newInstance() {
         return new DummyDataSource();
     }
 

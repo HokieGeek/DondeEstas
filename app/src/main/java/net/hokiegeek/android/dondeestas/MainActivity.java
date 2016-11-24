@@ -78,8 +78,18 @@ public class MainActivity extends AppCompatActivity
 
         // Setup the data model
         // TODO: not done yet!
-        DataSource ds = new DummyDataSource();
+        DataSource ds = DummyDataSource.newInstance();
         dataModel = new Model(ds);
+
+        /*
+        List<MarkerOptions> markers = new ArrayList<>();
+        markers.add(new MarkerOptions().position(new LatLng(38.975095, -77.195674)).title("Andres"));
+        markers.add(new MarkerOptions().position(new LatLng(39.1888622, -77.287454)).title("Olivia"));
+        markers.add(new MarkerOptions().position(new LatLng(39.189658, -77.279528)).title("Keri"));
+
+        mf.updateMarkers(markers);
+        mf.zoomToMarkers();
+        */
     }
 
     @Override
@@ -111,6 +121,8 @@ public class MainActivity extends AppCompatActivity
 
         if (fragment instanceof MapFragment) {
             MapFragment mf = (MapFragment) fragment;
+            // TODO
+            /*
             Vector<MarkerOptions> markers = new Vector<>();
             markers.add(new MarkerOptions().position(new LatLng(38.975095, -77.195674)).title("Andres"));
             markers.add(new MarkerOptions().position(new LatLng(39.1888622, -77.287454)).title("Olivia"));
@@ -118,6 +130,7 @@ public class MainActivity extends AppCompatActivity
 
             mf.updateMarkers(markers);
             mf.zoomToMarkers();
+            */
         }
     }
 
