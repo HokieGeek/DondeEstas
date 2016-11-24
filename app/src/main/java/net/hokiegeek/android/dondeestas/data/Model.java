@@ -31,7 +31,7 @@ public class Model {
 
     public Person getPerson(Integer id) {
         if (!people.containsKey(id)) {
-
+            return people.get(id);
         }
     }
 
