@@ -22,6 +22,9 @@ import android.widget.Toast;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import net.hokiegeek.android.dondeestas.data.Model;
+import net.hokiegeek.android.dondeestas.datasource.DataSource;
+import net.hokiegeek.android.dondeestas.datasource.DummyDataSource;
 import net.hokiegeek.android.dondeestas.dummy.DummyContent;
 
 import java.util.Vector;
@@ -53,6 +56,8 @@ public class MainActivity extends AppCompatActivity
 
     private PersonFragment personFragment;
 
+    private Model dataModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +75,11 @@ public class MainActivity extends AppCompatActivity
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+
+        // Setup the data model
+        // TODO: not done yet!
+        DataSource ds = new DummyDataSource();
+        dataModel = new Model(ds);
     }
 
     @Override
@@ -103,7 +113,7 @@ public class MainActivity extends AppCompatActivity
             MapFragment mf = (MapFragment) fragment;
             Vector<MarkerOptions> markers = new Vector<>();
             markers.add(new MarkerOptions().position(new LatLng(38.975095, -77.195674)).title("Andres"));
-            markers.add(new MarkerOptions().position(new LatLng(39.1888622, -77.287454)).title("Olivia").snippet("Exploring"));
+            markers.add(new MarkerOptions().position(new LatLng(39.1888622, -77.287454)).title("Olivia"));
             markers.add(new MarkerOptions().position(new LatLng(39.189658, -77.279528)).title("Keri"));
 
             mf.updateMarkers(markers);

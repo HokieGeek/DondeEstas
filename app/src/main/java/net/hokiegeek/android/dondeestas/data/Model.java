@@ -1,5 +1,8 @@
 package net.hokiegeek.android.dondeestas.data;
 
+import net.hokiegeek.android.dondeestas.datasource.DataSource;
+import net.hokiegeek.android.dondeestas.datasource.DataSourceListener;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,44 +12,49 @@ import java.util.Map;
  * Created by andres on 11/23/16.
  */
 
-public class Model {
+public class Model implements DataSource, DataSourceListener {
 
-    private Map<Integer, Person> people;
-
+    private DataSource dataSource;
     private List<UpdateListener> listeners;
 
-    private Model() {
-        people = new HashMap<>();
-        listeners = new ArrayList<>();
-    }
-
-    public Model newInstance() {
-        return new Model();
-    }
-
-    public List<Person> getPeople() {
-        return null;
-        // return people.entrySet();
-    }
-
-    public Person getPerson(Integer id) {
-        if (!people.containsKey(id)) {
-            return people.get(id);
-        }
+    public Model(DataSource dataSource) {
+        this.dataSource = dataSource;
+        this.listeners = new ArrayList<>();
     }
 
     void addListener(UpdateListener l) {
-       if (!listeners.contains(l)) {
-           listeners.add(l);
-       }
+        synchronized (listeners) {
+            if (!listeners.contains(l)) {
+                listeners.add(l);
+            }
+        }
     }
 
     boolean removeListener(UpdateListener l) {
-        if (listeners.contains(l)) {
-            listeners.remove(l);
-            return true;
+        synchronized (listeners) {
+            if (listeners.contains(l)) {
+                listeners.remove(l);
+                return true;
+            }
         }
         return false;
+    }
+
+    @Override
+    public List<Person> getPeopleById(List<Integer> ids) {
+        return dataSource.getPeopleById(ids);
+    }
+
+    @Override
+    public Person getPersonById(Integer id) {
+        return dataSource.getPersonById(id);
+    }
+
+    @Override
+    public void onDataSourceUpdate() {
+        for (UpdateListener l : listeners) {
+            l.onModelUpdate();
+        }
     }
 
     public interface UpdateListener {
