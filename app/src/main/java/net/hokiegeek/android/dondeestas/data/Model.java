@@ -1,28 +1,29 @@
 package net.hokiegeek.android.dondeestas.data;
 
 import net.hokiegeek.android.dondeestas.datasource.DataSource;
-import net.hokiegeek.android.dondeestas.datasource.DataSourceListener;
+import net.hokiegeek.android.dondeestas.datasource.DataUpdateListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by andres on 11/23/16.
  */
 
-public class Model implements DataSource, DataSourceListener {
+public class Model implements DataSource, DataUpdateListener {
+    private static final String TAG = "DONDE";
 
     private DataSource dataSource;
-    private List<UpdateListener> listeners;
+    private List<DataUpdateListener> listeners;
 
     public Model(DataSource dataSource) {
-        this.dataSource = dataSource;
         this.listeners = new ArrayList<>();
+        this.dataSource = dataSource;
+        this.dataSource.addListener(this);
     }
 
-    void addListener(UpdateListener l) {
+    @Override
+    public void addListener(DataUpdateListener l) {
         synchronized (listeners) {
             if (!listeners.contains(l)) {
                 listeners.add(l);
@@ -30,7 +31,8 @@ public class Model implements DataSource, DataSourceListener {
         }
     }
 
-    boolean removeListener(UpdateListener l) {
+    @Override
+    public boolean removeListener(DataUpdateListener l) {
         synchronized (listeners) {
             if (listeners.contains(l)) {
                 listeners.remove(l);
@@ -41,8 +43,13 @@ public class Model implements DataSource, DataSourceListener {
     }
 
     @Override
-    public List<Person> getPeopleById(List<Integer> ids) {
-        return dataSource.getPeopleById(ids);
+    public List<Person> getPeople() {
+        return dataSource.getPeople();
+    }
+
+    @Override
+    public List<Person> getPeopleByIdList(List<Integer> ids) {
+        return dataSource.getPeopleByIdList(ids);
     }
 
     @Override
@@ -51,13 +58,9 @@ public class Model implements DataSource, DataSourceListener {
     }
 
     @Override
-    public void onDataSourceUpdate() {
-        for (UpdateListener l : listeners) {
-            l.onModelUpdate();
+    public void onDataUpdate() {
+        for (DataUpdateListener l : listeners) {
+            l.onDataUpdate();
         }
-    }
-
-    public interface UpdateListener {
-        void onModelUpdate();
     }
 }

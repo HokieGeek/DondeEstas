@@ -3,6 +3,7 @@ package net.hokiegeek.android.dondeestas.datasource;
 import net.hokiegeek.android.dondeestas.data.Person;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,9 +15,10 @@ public class DummyDataSource implements DataSource {
 
     private Map<Integer, Person> people;
 
-    private List<DataSourceListener> listeners;
+    private List<DataUpdateListener> listeners;
 
     private DummyDataSource() {
+        people = new HashMap<>();
         listeners = new ArrayList<>();
     }
 
@@ -26,10 +28,12 @@ public class DummyDataSource implements DataSource {
 
     public void updatePeople(List<Person> newPeople) {
         boolean updated = false;
-        for (Person p : newPeople) {
-            if (p != null) {
-                people.put(p.id, p);
-                updated = true;
+        if (newPeople != null) {
+            for (Person p : newPeople) {
+                if (p != null) {
+                    people.put(p.getId(), p);
+                    updated = true;
+                }
             }
         }
         if (updated) {
@@ -37,7 +41,8 @@ public class DummyDataSource implements DataSource {
         }
     }
 
-    public void addListener(DataSourceListener l) {
+    @Override
+    public void addListener(DataUpdateListener l) {
         synchronized (listeners) {
             if (!listeners.contains(l)) {
                 listeners.add(l);
@@ -45,22 +50,30 @@ public class DummyDataSource implements DataSource {
         }
     }
 
-    public void removeListener(DataSourceListener l) {
+    @Override
+    public boolean removeListener(DataUpdateListener l) {
         synchronized (listeners) {
             if (listeners.contains(l)) {
                 listeners.remove(l);
+                return true;
             }
         }
+        return false;
     }
 
     private void fireOnDataSourceUpdate() {
-        for (DataSourceListener l : listeners) {
-            l.onDataSourceUpdate();
+        for (DataUpdateListener l : listeners) {
+            l.onDataUpdate();
         }
     }
 
     @Override
-    public List<Person> getPeopleById(List<Integer> ids) {
+    public List<Person> getPeople() {
+        return new ArrayList<>(people.values());
+    }
+
+    @Override
+    public List<Person> getPeopleByIdList(List<Integer> ids) {
         List<Person> l = new ArrayList<>();
         synchronized (people) {
             for (Integer id : ids) {

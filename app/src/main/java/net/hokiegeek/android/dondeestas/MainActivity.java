@@ -10,31 +10,28 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-
 import net.hokiegeek.android.dondeestas.data.Model;
+import net.hokiegeek.android.dondeestas.data.Person;
+import net.hokiegeek.android.dondeestas.data.PersonBuilder;
 import net.hokiegeek.android.dondeestas.datasource.DataSource;
+import net.hokiegeek.android.dondeestas.datasource.DataUpdateListener;
 import net.hokiegeek.android.dondeestas.datasource.DummyDataSource;
 import net.hokiegeek.android.dondeestas.dummy.DummyContent;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements
         MapFragment.OnFragmentLoadedListener,
-        PersonFragment.OnListFragmentInteractionListener
+        PersonFragment.OnListFragmentInteractionListener,
+        DataUpdateListener
 {
-
     private static final String TAG = "DONDE";
 
     /**
@@ -58,6 +55,8 @@ public class MainActivity extends AppCompatActivity
 
     private Model dataModel;
 
+    private DataSource dataSource;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,19 +76,30 @@ public class MainActivity extends AppCompatActivity
         tabLayout.setupWithViewPager(mViewPager);
 
         // Setup the data model
-        // TODO: not done yet!
-        DataSource ds = DummyDataSource.newInstance();
-        dataModel = new Model(ds);
+        dataSource = DummyDataSource.newInstance();
+        dataModel = new Model(dataSource);
 
-        /*
-        List<MarkerOptions> markers = new ArrayList<>();
-        markers.add(new MarkerOptions().position(new LatLng(38.975095, -77.195674)).title("Andres"));
-        markers.add(new MarkerOptions().position(new LatLng(39.1888622, -77.287454)).title("Olivia"));
-        markers.add(new MarkerOptions().position(new LatLng(39.189658, -77.279528)).title("Keri"));
+        // REMOVE
+        List<Person> people = new ArrayList<>();
+        people.add(new PersonBuilder()
+                .id(0)
+                .name("Andres")
+                .position(38.975095, -77.195674, 0.0)
+                .build());
 
-        mf.updateMarkers(markers);
-        mf.zoomToMarkers();
-        */
+        people.add(new PersonBuilder()
+                .id(1)
+                .name("Keri")
+                .position(39.189658, -77.279528, 0.0)
+                .build());
+
+        people.add(new PersonBuilder()
+                .id(2)
+                .name("Olivia")
+                .position(39.1888622, -77.287454, 0.0)
+                .build());
+
+        ((DummyDataSource)dataSource).updatePeople(people);
     }
 
     @Override
@@ -120,17 +130,11 @@ public class MainActivity extends AppCompatActivity
         Log.v(TAG, "onFragmentLoaded");
 
         if (fragment instanceof MapFragment) {
-            MapFragment mf = (MapFragment) fragment;
-            // TODO
-            /*
-            Vector<MarkerOptions> markers = new Vector<>();
-            markers.add(new MarkerOptions().position(new LatLng(38.975095, -77.195674)).title("Andres"));
-            markers.add(new MarkerOptions().position(new LatLng(39.1888622, -77.287454)).title("Olivia"));
-            markers.add(new MarkerOptions().position(new LatLng(39.189658, -77.279528)).title("Keri"));
+            mapFragment = (MapFragment)fragment;
 
-            mf.updateMarkers(markers);
-            mf.zoomToMarkers();
-            */
+            dataModel.addListener(this);
+
+            this.updateFragments();
         }
     }
 
@@ -138,6 +142,21 @@ public class MainActivity extends AppCompatActivity
     public void onListFragmentInteraction(DummyContent.DummyItem item) {
         Log.v(TAG, "onListFragmentInteraction");
         Toast.makeText(this, item.toString(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDataUpdate() {
+        this.updateFragments();
+    }
+
+    private void updateFragments() {
+        Log.v(TAG, "MainActivity::updateFragments()");
+        if (mapFragment != null) {
+            mapFragment.updateMarkers(Util.PersonListToMarkerOptionList(dataModel.getPeople()));
+            mapFragment.zoomToMarkers();
+        }
+
+        // TODO: peopleFragment
     }
 
     /**
@@ -154,7 +173,8 @@ public class MainActivity extends AppCompatActivity
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return (mapFragment = MapFragment.newInstance());
+                    return MapFragment.newInstance();
+                    // return (mapFragment = MapFragment.newInstance());
                 case 1:
                     return (personFragment = PersonFragment.newInstance(1));
             }

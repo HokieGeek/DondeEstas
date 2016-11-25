@@ -3,7 +3,6 @@ package net.hokiegeek.android.dondeestas;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -22,12 +21,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,7 +45,7 @@ public class MapFragment extends Fragment
     private MapView mapView;
     private GoogleMap map;
 
-    private Vector<Marker> markers;
+    private List<Marker> markers;
 
     /**
      * Request code for location permission request.
@@ -58,7 +57,7 @@ public class MapFragment extends Fragment
     private OnFragmentLoadedListener mLoadedListener;
 
     public MapFragment() {
-        markers = new Vector<>();
+        markers = new ArrayList<>();
     }
 
     /**
@@ -220,7 +219,7 @@ public class MapFragment extends Fragment
         }
     }
 
-    public void updateMarkers(Vector<MarkerOptions> markerOptions) {
+    public void updateMarkers(List<MarkerOptions> markerOptions) {
         Log.v(TAG, "updateMarkers()");
         if (!markerOptions.isEmpty()) {
             map.clear();
