@@ -16,15 +16,10 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import net.hokiegeek.android.dondeestas.data.Model;
-import net.hokiegeek.android.dondeestas.data.Person;
-import net.hokiegeek.android.dondeestas.data.PersonBuilder;
 import net.hokiegeek.android.dondeestas.datasource.DataSource;
 import net.hokiegeek.android.dondeestas.datasource.DataUpdateListener;
 import net.hokiegeek.android.dondeestas.datasource.DummyDataSource;
 import net.hokiegeek.android.dondeestas.dummy.DummyContent;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements
@@ -78,28 +73,6 @@ public class MainActivity extends AppCompatActivity
         // Setup the data model
         dataSource = DummyDataSource.newInstance();
         dataModel = new Model(dataSource);
-
-        // REMOVE
-        List<Person> people = new ArrayList<>();
-        people.add(new PersonBuilder()
-                .id(0)
-                .name("Andres")
-                .position(38.975095, -77.195674, 0.0)
-                .build());
-
-        people.add(new PersonBuilder()
-                .id(1)
-                .name("Keri")
-                .position(39.189658, -77.279528, 0.0)
-                .build());
-
-        people.add(new PersonBuilder()
-                .id(2)
-                .name("Olivia")
-                .position(39.1888622, -77.287454, 0.0)
-                .build());
-
-        ((DummyDataSource)dataSource).updatePeople(people);
     }
 
     @Override
