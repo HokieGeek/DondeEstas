@@ -11,11 +11,11 @@ import java.util.List;
  * Created by andres on 11/29/16.
  */
 
-public class CouchDbSource implements DataSource {
+public class DbSource implements DataSource {
 
     private List<DataUpdateListener> listeners;
 
-    private CouchDbSource() {
+    private DbSource() {
         listeners = new ArrayList<>();
     }
 
@@ -48,20 +48,20 @@ public class CouchDbSource implements DataSource {
     @Override
     public List<Person> getPeople() {
         List<Person> l = new ArrayList<>();
-        // TODO: Implement CouchDbSource.getPeople()
+        // TODO: Implement DbSource.getPeople()
         return l;
     }
 
     @Override
     public List<Person> getPeopleByIdList(List<Integer> ids) {
         List<Person> l = new ArrayList<>();
-        // TODO: Implement CouchDbSource.getPeopleByIdList()
+        // TODO: Implement DbSource.getPeopleByIdList()
         return l;
     }
 
     @Override
     public Person getPersonById(Integer id) {
-        return new Person(); // TODO: Implement CouchDbSource.getPersonById()
+        return new Person(); // TODO: Implement DbSource.getPersonById()
     }
 
     protected void get(String url, String... params) {
