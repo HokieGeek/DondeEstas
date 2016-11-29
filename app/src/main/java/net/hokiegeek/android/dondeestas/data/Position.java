@@ -1,5 +1,7 @@
 package net.hokiegeek.android.dondeestas.data;
 
+import java.util.Date;
+
 /**
  * Created by andres on 11/23/16.
  */
@@ -8,12 +10,14 @@ public class Position {
     public final double latitude;
     public final double longitude;
     public final double elevation;
+    public final Date tov;
 
-    public Position(double latitude, double longitude) {
-        this(latitude, longitude, 0.0);
+    public Position(Date tov, double latitude, double longitude) {
+        this(tov, latitude, longitude, 0.0);
     }
 
-    public Position(double latitude, double longitude, double elevation) {
+    public Position(Date tov, double latitude, double longitude, double elevation) {
+        this.tov = (Date)tov.clone();
         this.latitude = latitude;
         this.longitude = longitude;
         this.elevation = elevation;
@@ -36,7 +40,8 @@ public class Position {
             Position other = (Position)o;
             return this.latitude == other.latitude &&
                    this.longitude == other.longitude &&
-                   this.elevation == other.elevation;
+                   this.elevation == other.elevation &&
+                   this.tov.equals(other.tov);
         } else {
             return false;
         }
@@ -51,6 +56,8 @@ public class Position {
         dummyLong = Double.doubleToLongBits(this.longitude);
         result = 42 * result + (int)(dummyLong ^ (dummyLong >>> 32));
         dummyLong = Double.doubleToLongBits(this.elevation);
+        result = 42 * result + (int)(dummyLong ^ (dummyLong >>> 32));
+        dummyLong = this.tov.getTime();
         result = 42 * result + (int)(dummyLong ^ (dummyLong >>> 32));
 
         return result;

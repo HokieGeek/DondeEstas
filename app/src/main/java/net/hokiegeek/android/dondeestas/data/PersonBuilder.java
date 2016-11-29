@@ -1,7 +1,6 @@
 package net.hokiegeek.android.dondeestas.data;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -12,17 +11,17 @@ public class PersonBuilder {
         protected Integer id;
         protected String name;
         protected Position position;
-        protected Date tov;
         protected Boolean visible;
         protected List<Integer> whitelist;
+        protected List<Integer> following;
 
         public PersonBuilder() {
             this.id = -1;
             this.name = "";
             this.position = new Position(0.0, 0.0, 0.0);
-            this.tov = new Date();
             this.visible = false;
             this.whitelist = new ArrayList<>();
+            this.following = new ArrayList<>();
         }
 
         public Person build() {
@@ -39,17 +38,12 @@ public class PersonBuilder {
             return this;
         }
 
-        public PersonBuilder position(double latitude, double longitude, double elevation) {
-            return this.position(new Position(latitude, longitude, elevation));
+        public PersonBuilder position(Date tov, double latitude, double longitude, double elevation) {
+            return this.position(new Position(tov, latitude, longitude, elevation));
         }
 
         public PersonBuilder position(Position position) {
             this.position = position;
-            return this;
-        }
-
-        public PersonBuilder tov(Date tov) {
-            this.tov = (Date)tov.clone();
             return this;
         }
 
@@ -67,4 +61,14 @@ public class PersonBuilder {
             this.whitelist = whitelist;
             return this;
         }
+
+        public PersonBuilder follow(Integer id) {
+            this.following.add(id);
+            return this;
+        }
+
+        public PersonBuilder following(List<Integer> following) {
+            this.whitelist = following;
+            return this;
+    }
 }
