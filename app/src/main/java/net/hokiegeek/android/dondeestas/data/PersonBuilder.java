@@ -1,6 +1,7 @@
 package net.hokiegeek.android.dondeestas.data;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public class PersonBuilder {
         public PersonBuilder() {
             this.id = -1;
             this.name = "";
-            this.position = new Position(0.0, 0.0, 0.0);
+            this.position = new Position(new Date(), 0.0, 0.0, 0.0);
             this.visible = false;
             this.whitelist = new ArrayList<>();
             this.following = new ArrayList<>();

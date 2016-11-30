@@ -4,6 +4,7 @@ import net.hokiegeek.android.dondeestas.data.Person;
 import net.hokiegeek.android.dondeestas.data.PersonBuilder;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,13 +27,13 @@ public class DummyDataSource implements DataSource {
         people.add(new PersonBuilder()
                 .id(1)
                 .name("Keri")
-                .position(39.189658, -77.279528, 0.0)
+                .position(new Date(), 39.189658, -77.279528, 0.0)
                 .build());
 
         people.add(new PersonBuilder()
                 .id(2)
                 .name("Olivia")
-                .position(39.1888622, -77.287454, 0.0)
+                .position(new Date(), 39.1888622, -77.287454, 0.0)
                 .build());
 
         this.updatePeople(people);

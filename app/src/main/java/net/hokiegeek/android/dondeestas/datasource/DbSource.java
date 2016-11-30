@@ -61,7 +61,7 @@ public class DbSource implements DataSource {
 
     @Override
     public Person getPersonById(Integer id) {
-        return new Person(); // TODO: Implement DbSource.getPersonById()
+        return new PersonBuilder().build(); // TODO: Implement DbSource.getPersonById()
     }
 
     protected void get(String url, String... params) {

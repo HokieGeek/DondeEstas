@@ -26,10 +26,6 @@ public class Person {
         return params.position;
     }
 
-    public Date getTov() {
-        return params.tov;
-    }
-
     public Boolean getVisible() {
         return params.visible;
     }
@@ -37,6 +33,8 @@ public class Person {
     public List<Integer> getWhitelist() {
         return params.whitelist;
     }
+
+    public List<Integer> getFollowing() { return params.following; }
 
     @Override
     public String toString() {
