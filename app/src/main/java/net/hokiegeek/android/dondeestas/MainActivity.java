@@ -122,10 +122,12 @@ public class MainActivity extends AppCompatActivity
             if (requestingLocationUpdates) {
                 message = "Reporting location";
                 locationPublisher.start();
+                item.setChecked(true);
                 // TODO: "enable" the button
             } else {
                 message = "Not reporting location";
                 locationPublisher.stop();
+                item.setChecked(false);
                 // TODO: "disable" the button
             }
 
