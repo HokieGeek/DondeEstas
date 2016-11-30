@@ -3,11 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="net.hokiegeek.android.dondeestas.MainActivity">
     <item
-        android:title="Login..."
-        android:orderInCategory="100"
-        android:visible="true"
-        android:enabled="true" />
-    <item
         android:id="@+id/action_settings"
         android:orderInCategory="101"
         android:title="@string/action_settings"
