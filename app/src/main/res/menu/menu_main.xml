@@ -3,6 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="net.hokiegeek.android.dondeestas.MainActivity">
     <item
+        android:id="@+id/action_visibility"
+        android:orderInCategory="100"
+        android:icon="@android:drawable/ic_menu_view"
+        android:title="Toggle Visibility"
+        app:showAsAction="always"
+        android:visible="true"
+        android:enabled="true"
+        android:checkable="true"
+        android:checked="true" />
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="101"
         android:title="@string/action_settings"

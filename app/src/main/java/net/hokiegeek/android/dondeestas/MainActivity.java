@@ -114,6 +114,22 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             // TODO: allow to input your username key
+            Toast.makeText(this, "TODO", Toast.LENGTH_SHORT).show();
+            return true;
+        } else if (id == R.id.action_visibility) {
+            requestingLocationUpdates = !requestingLocationUpdates;
+            String message = "";
+            if (requestingLocationUpdates) {
+                message = "Reporting location";
+                locationPublisher.start();
+                // TODO: "enable" the button
+            } else {
+                message = "Not reporting location";
+                locationPublisher.stop();
+                // TODO: "disable" the button
+            }
+
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             return true;
         }
 
