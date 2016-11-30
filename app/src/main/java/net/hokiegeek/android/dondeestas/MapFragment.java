@@ -43,6 +43,7 @@ public class MapFragment extends Fragment
     private static final String TAG = "DONDE";
 
     private MapView mapView;
+
     private GoogleMap map;
 
     private List<Marker> markers;
@@ -126,6 +127,8 @@ public class MapFragment extends Fragment
 
             // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
             MapsInitializer.initialize(this.getActivity());
+
+            this.map.getUiSettings().setMapToolbarEnabled(false); // TODO: Would be better to relocate them
 
             mLoadedListener.onFragmentLoaded(this);
         } catch (SecurityException e) {
