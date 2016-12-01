@@ -13,10 +13,17 @@ import java.util.List;
 
 public class DbSource implements DataSource {
 
+    private static final String PATH_SEP = "/";
+    private static final String PATH_GET_PERSON = "person";
+    private static final String PATH_UPDATE_LOCATION = "update";
+
     private List<DataUpdateListener> listeners;
 
-    private DbSource() {
-        listeners = new ArrayList<>();
+    private String url;
+
+    private DbSource(String dbUrl) {
+        this.url = dbUrl;
+        this.listeners = new ArrayList<>();
     }
 
     @Override
@@ -62,6 +69,12 @@ public class DbSource implements DataSource {
     @Override
     public Person getPersonById(String id) {
         return new PersonBuilder().build(); // TODO: Implement DbSource.getPersonById()
+    }
+
+    @Override
+    public boolean updatePerson(p Person) {
+        // TODO: ??
+        return false;
     }
 
     protected void get(String url, String... params) {

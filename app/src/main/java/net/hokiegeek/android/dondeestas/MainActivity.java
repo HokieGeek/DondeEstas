@@ -26,8 +26,8 @@ public class MainActivity extends AppCompatActivity
         implements
         MapFragment.OnFragmentLoadedListener,
         PersonFragment.OnListFragmentInteractionListener,
-        DataUpdateListener
-        // OnSharedPreferenceChangeListener
+        DataUpdateListener,
+        OnSharedPreferenceChangeListener
 {
     private static final String TAG = "DONDE";
 
@@ -48,15 +48,15 @@ public class MainActivity extends AppCompatActivity
 
     private MapFragment mapFragment;
 
-    private PersonFragment personFragment;
+    private PersonFragment followingFragment;
 
     private Model dataModel;
-
-    private DataSource dataSource;
 
     private boolean requestingLocationUpdates;
 
     private LocationPublisher locationPublisher;
+
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,26 +76,30 @@ public class MainActivity extends AppCompatActivity
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        requestingLocationUpdates = true; // TODO: make this toggleable
-        locationPublisher = new LocationPublisher();
-        locationPublisher.init(this);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String dbServer = sharedPref.getString(SettingsActivity.KEY_SERVER, "");
+        String userId = sharedPref.getString(SettingsActivity.KEY_USER_ID, "");
+
+        initializeData(dbServer, userId);
+    }
+
+    protected void initializeData(String dbServer, String userId) {
+        locationPublisher = new LocationPublisher(this, loc -> {
+            Log.v(TAG, "Location: "+loc.toString());
+            user.updatePosition(Util.LocationToPosition(loc));
+            dataModel.updatePerson(user);
+        });
 
         // Setup the data model
-        dataSource = DummyDataSource.newInstance();
-        dataModel = new Model(dataSource);
+        DataSource db = new DbSource(dbServer);
+        dataModel = new Model(db);
 
-        /*
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String syncConnPref = sharedPref.getString(SettingsActivity.KEY_PREF_SYNC_CONN, "");
-
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (key.equals(KEY_PREF_SYNC_CONN)) {
-                Preference connectionPref = findPreference(key);
-                // Set summary to be the user-description for the selected value
-                connectionPref.setSummary(sharedPreferences.getString(key, ""));
-            }
+        // Update the user
+        Person user = dataModel.getPersonById(userId);
+        if (user != null) {
+            this.user = new User(user);
         }
-        */
+        requestingLocationUpdates = user.getVisibility(); // TODO: Read this from the data model
     }
 
     @Override
@@ -186,6 +190,15 @@ public class MainActivity extends AppCompatActivity
         // TODO: peopleFragment
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(SettingsActivity.KEY_SERVER) || key.equals(SettingsActivity.KEY_USER_ID) {
+            initializeData(sharedPreferences.getString(SettingsActivity.KEY_SERVER), sharedPreferences.getString(SettingsActivity.KEY_USER_ID))
+        } else if (key.equals(SettingsActivity.KEY_USER_NAME)) {
+            // TODO: Update in the database
+        }
+    }
+
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -203,7 +216,7 @@ public class MainActivity extends AppCompatActivity
                     return MapFragment.newInstance();
                     // return (mapFragment = MapFragment.newInstance());
                 case 1:
-                    return (personFragment = PersonFragment.newInstance(1));
+                    return (followingFragment = PersonFragment.newInstance(1));
             }
             return null;
         }

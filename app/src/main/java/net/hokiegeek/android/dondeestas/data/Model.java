@@ -59,8 +59,7 @@ public class Model implements DataSource, DataUpdateListener {
 
     @Override
     public boolean updatePerson(p Person) {
-        // TODO: implement
-        return false;
+        return dataSource.updatePerson(p);
     }
 
     @Override

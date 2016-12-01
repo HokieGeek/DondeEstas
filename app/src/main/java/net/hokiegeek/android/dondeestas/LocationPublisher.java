@@ -17,6 +17,8 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import java.util.function.Consumer;
+
 /**
  * Created by andres on 11/29/16.
  */
@@ -35,8 +37,11 @@ public class LocationPublisher
 
     private Context context;
 
-    public void init(Context parent) {
+    private Consumer<Location> updateFunc;
+
+    public LocationPublisher(Context parent, Consumer<Location> update) {
         context = parent;
+        updateFunc = update;
 
         locationRequest = new LocationRequest();
         locationRequest.setInterval(10000);
@@ -135,7 +140,7 @@ public class LocationPublisher
     public void onLocationChanged(Location location) {
         // TODO
         Toast.makeText(context, location.toString(), Toast.LENGTH_SHORT).show();
-        Log.v(TAG, "Location: ");
+        updatefunc.accept(location)
     }
 
 }

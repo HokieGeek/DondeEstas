@@ -29,6 +29,10 @@ public class PersonBuilder {
             return new Person(this);
         }
 
+        public Person clone() {
+            // TODO
+        }
+
         public PersonBuilder id(String id) {
             this.id = id;
             return this;
@@ -63,7 +67,7 @@ public class PersonBuilder {
             return this;
         }
 
-        public PersonBuilder follow(String id) {
+        public PersonBuilder following(String id) {
             this.following.add(id);
             return this;
         }

@@ -14,6 +14,10 @@ import java.util.List;
  */
 
 public final class Util {
+    public static final Postion LocationToPosition(Location l) {
+        // TODO
+        return new Position();
+    }
     public static final LatLng PositionToLatLng(Position p) {
         return new LatLng(p.latitude, p.longitude);
     }

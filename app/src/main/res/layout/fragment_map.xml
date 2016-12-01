@@ -19,7 +19,7 @@
         app:fabSize="normal"
         app:srcCompat="@drawable/ic_maps_marker_person"
         android:id="@+id/fabFitMarkers"
-        app:backgroundTint="@android:color/holo_green_dark"
+        app:backgroundTint="@color/colorAccent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"

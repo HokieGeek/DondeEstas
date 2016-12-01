@@ -98,8 +98,13 @@ public class DummyDataSource implements DataSource {
     }
 
     private void fireOnDataSourceUpdate() {
-        for (DataUpdateListener l : listeners) {
-            l.onDataUpdate();
+        synchronized (listeners) {
+            listeners.foreach(l -> l.onDataUpdate());
+            /* TODO: remove?
+            for (DataUpdateListener l : listeners) {
+                l.onDataUpdate();
+            }
+            */
         }
     }
 
@@ -112,11 +117,18 @@ public class DummyDataSource implements DataSource {
     public List<Person> getPeopleByIdList(List<String> ids) {
         List<Person> l = new ArrayList<>();
         synchronized (people) {
+            ids.foreach(id -> {
+                if (people.containsKey(id)) {
+                    l.add(people.get(id));
+                }
+            });
+            /* TODO: remove?
             for (String id : ids) {
                 if (people.containsKey(id)) {
                     l.add(people.get(id));
                 }
             }
+            */
         }
         return l;
     }
@@ -133,6 +145,7 @@ public class DummyDataSource implements DataSource {
 
     @Override
     public boolean updatePerson(p Person) {
+        // TODO: ??
         return false;
     }
 }
