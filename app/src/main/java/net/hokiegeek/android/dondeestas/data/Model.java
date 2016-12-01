@@ -48,13 +48,19 @@ public class Model implements DataSource, DataUpdateListener {
     }
 
     @Override
-    public List<Person> getPeopleByIdList(List<Integer> ids) {
+    public List<Person> getPeopleByIdList(List<String> ids) {
         return dataSource.getPeopleByIdList(ids);
     }
 
     @Override
-    public Person getPersonById(Integer id) {
+    public Person getPersonById(String id) {
         return dataSource.getPersonById(id);
+    }
+
+    @Override
+    public boolean updatePerson(p Person) {
+        // TODO: implement
+        return false;
     }
 
     @Override
