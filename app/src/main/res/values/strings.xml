@@ -3,4 +3,12 @@
     <string name="action_settings">Settings</string>
     <string name="tab_name_map">Map</string>
     <string name="tab_name_following">Following</string>
+
+    <string name="pref_server_title">Server</string>
+    <string name="pref_server_summary">This is the URL of the location server</string>
+    <string name="pref_server_hint">[http://]example.com[:1234]</string>
+    <string name="pref_userid_title">User</string>
+    <string name="pref_userid_summary">Identifier for the user of this phone</string>
+    <string name="pref_name_title">Name</string>
+    <string name="pref_name_summary">The name which will appear on your marker in other phones</string>
 </resources>

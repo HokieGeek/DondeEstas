@@ -1,5 +1,6 @@
 package net.hokiegeek.android.dondeestas;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity
         MapFragment.OnFragmentLoadedListener,
         PersonFragment.OnListFragmentInteractionListener,
         DataUpdateListener
+        // OnSharedPreferenceChangeListener
 {
     private static final String TAG = "DONDE";
 
@@ -81,6 +83,19 @@ public class MainActivity extends AppCompatActivity
         // Setup the data model
         dataSource = DummyDataSource.newInstance();
         dataModel = new Model(dataSource);
+
+        /*
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String syncConnPref = sharedPref.getString(SettingsActivity.KEY_PREF_SYNC_CONN, "");
+
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if (key.equals(KEY_PREF_SYNC_CONN)) {
+                Preference connectionPref = findPreference(key);
+                // Set summary to be the user-description for the selected value
+                connectionPref.setSummary(sharedPreferences.getString(key, ""));
+            }
+        }
+        */
     }
 
     @Override
@@ -111,10 +126,9 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            // TODO: allow to input your username key
-            Toast.makeText(this, "TODO", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         } else if (id == R.id.action_visibility) {
             requestingLocationUpdates = !requestingLocationUpdates;
