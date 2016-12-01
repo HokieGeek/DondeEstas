@@ -9,15 +9,15 @@ import java.util.List;
  */
 
 public class PersonBuilder {
-        protected Integer id;
+        protected String id;
         protected String name;
         protected Position position;
         protected Boolean visible;
-        protected List<Integer> whitelist;
-        protected List<Integer> following;
+        protected List<String> whitelist;
+        protected List<String> following;
 
         public PersonBuilder() {
-            this.id = -1;
+            this.id = "";
             this.name = "";
             this.position = new Position(new Date(), 0.0, 0.0, 0.0);
             this.visible = false;
@@ -29,7 +29,7 @@ public class PersonBuilder {
             return new Person(this);
         }
 
-        public PersonBuilder id(Integer id) {
+        public PersonBuilder id(String id) {
             this.id = id;
             return this;
         }
@@ -53,22 +53,22 @@ public class PersonBuilder {
             return this;
         }
 
-        public PersonBuilder whitelist(Integer id) {
+        public PersonBuilder whitelist(String id) {
             this.whitelist.add(id);
             return this;
         }
 
-        public PersonBuilder whitelist(List<Integer> whitelist) {
+        public PersonBuilder whitelist(List<String> whitelist) {
             this.whitelist = whitelist;
             return this;
         }
 
-        public PersonBuilder follow(Integer id) {
+        public PersonBuilder follow(String id) {
             this.following.add(id);
             return this;
         }
 
-        public PersonBuilder following(List<Integer> following) {
+        public PersonBuilder following(List<String> following) {
             this.whitelist = following;
             return this;
     }

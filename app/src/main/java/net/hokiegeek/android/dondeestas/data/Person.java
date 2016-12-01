@@ -14,7 +14,7 @@ public class Person {
         this.params = params;
     }
 
-    public Integer getId() {
+    public String getId() {
         return params.id;
     }
 
@@ -30,11 +30,11 @@ public class Person {
         return params.visible;
     }
 
-    public List<Integer> getWhitelist() {
+    public List<String> getWhitelist() {
         return params.whitelist;
     }
 
-    public List<Integer> getFollowing() { return params.following; }
+    public List<String> getFollowing() { return params.following; }
 
     @Override
     public String toString() {
