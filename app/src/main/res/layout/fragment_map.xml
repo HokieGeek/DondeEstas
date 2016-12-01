@@ -17,7 +17,7 @@
         android:layout_margin="8dp"
         android:clickable="true"
         app:fabSize="normal"
-        app:srcCompat="@android:drawable/ic_menu_compass"
+        app:srcCompat="@drawable/ic_maps_marker_person"
         android:id="@+id/fabFitMarkers"
         app:backgroundTint="@android:color/holo_green_dark"
         android:layout_alignParentBottom="true"
