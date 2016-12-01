@@ -53,22 +53,20 @@ public class DbSource implements DataSource {
     }
 
     @Override
-    public List<Person> getPeopleByIdList(List<Integer> ids) {
+    public List<Person> getPeopleByIdList(List<String> ids) {
         List<Person> l = new ArrayList<>();
         // TODO: Implement DbSource.getPeopleByIdList()
         return l;
     }
 
     @Override
-    public Person getPersonById(Integer id) {
+    public Person getPersonById(String id) {
         return new PersonBuilder().build(); // TODO: Implement DbSource.getPersonById()
     }
 
     protected void get(String url, String... params) {
         // TODO
         /*
-        String url_select = "http://yoururlhere.com";
-
         ArrayList<NameValuePair> param = new ArrayList<NameValuePair>();
 
         try {

@@ -109,10 +109,10 @@ public class DummyDataSource implements DataSource {
     }
 
     @Override
-    public List<Person> getPeopleByIdList(List<Integer> ids) {
+    public List<Person> getPeopleByIdList(List<String> ids) {
         List<Person> l = new ArrayList<>();
         synchronized (people) {
-            for (Integer id : ids) {
+            for (String id : ids) {
                 if (people.containsKey(id)) {
                     l.add(people.get(id));
                 }
@@ -122,12 +122,17 @@ public class DummyDataSource implements DataSource {
     }
 
     @Override
-    public Person getPersonById(Integer id) {
+    public Person getPersonById(String id) {
         synchronized (people) {
             if (!people.containsKey(id)) {
                 return people.get(id);
             }
         }
         return null;
+    }
+
+    @Override
+    public boolean updatePerson(p Person) {
+        return false;
     }
 }

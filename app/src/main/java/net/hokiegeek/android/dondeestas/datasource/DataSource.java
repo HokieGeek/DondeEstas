@@ -11,9 +11,11 @@ import java.util.List;
 public interface DataSource {
     List<Person> getPeople();
 
-    List<Person> getPeopleByIdList(List<Integer> ids);
+    List<Person> getPeopleByIdList(List<String> ids);
 
-    Person getPersonById(Integer id);
+    Person getPersonById(String id);
+
+    boolean updatePerson(p Person);
 
     void addListener(DataUpdateListener l);
 
