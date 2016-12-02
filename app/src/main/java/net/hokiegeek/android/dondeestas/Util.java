@@ -9,6 +9,7 @@ import net.hokiegeek.android.dondeestas.data.Person;
 import net.hokiegeek.android.dondeestas.data.Position;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,9 +18,12 @@ import java.util.List;
 
 public final class Util {
     public static final Position LocationToPosition(Location l) {
-        // TODO
-        return null;
+        if (l == null) {
+            return new Position(new Date(), 0.0, 0.0, 0.0);
+        }
+        return new Position(new Date(), l.getLatitude(), l.getLongitude(), l.getAltitude());
     }
+
     public static final LatLng PositionToLatLng(Position p) {
         return new LatLng(p.latitude, p.longitude);
     }

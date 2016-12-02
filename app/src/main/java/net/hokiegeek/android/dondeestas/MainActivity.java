@@ -210,7 +210,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onLocationChanged(Location location) {
         Log.v(TAG, "Location: "+location.toString());
-        Toast.makeText(this, location.toString(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, Util.LocationToPosition(location).toString(), Toast.LENGTH_SHORT).show();
+
         user.setPosition(Util.LocationToPosition(location));
         dataModel.updatePerson(user.getPerson());
     }
@@ -230,7 +231,6 @@ public class MainActivity extends AppCompatActivity
             switch (position) {
                 case 0:
                     return MapFragment.newInstance();
-                    // return (mapFragment = MapFragment.newInstance());
                 case 1:
                     return (followingFragment = PersonFragment.newInstance(1));
             }
