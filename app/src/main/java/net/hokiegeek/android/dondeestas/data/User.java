@@ -20,8 +20,11 @@ public class User {
     }
 
     private void setPerson(Person p) {
-        person = p;
-        model.updatePerson(person);
+        synchronized (person) {
+            person = p;
+            Log.v(TAG, "User.setPerson()");
+            model.updatePerson(person);
+        }
     }
 
     public String getId() {

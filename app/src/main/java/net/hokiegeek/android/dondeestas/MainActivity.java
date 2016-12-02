@@ -106,7 +106,8 @@ public class MainActivity extends AppCompatActivity
             this.user = new User(user, dataModel);
         }
 
-        // TODO: Set the visibility toggle
+        // Set the visibility toggle
+        invalidateOptionsMenu();
     }
 
     @Override
