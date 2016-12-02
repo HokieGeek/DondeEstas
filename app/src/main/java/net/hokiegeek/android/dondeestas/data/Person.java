@@ -38,16 +38,16 @@ public class Person {
 
     @Override
     public String toString() {
-        return "TODO"; // TODO
+        return "TODO"; // TODO: implement toString()
     }
 
     @Override
     public boolean equals(Object o) {
-        return true; // TODO
+        return true; // TODO: implement equals()
     }
 
     @Override
     public int hashCode() {
-        return 41; // TODO
+        return 41; // TODO: implement hashCode
     }
 }

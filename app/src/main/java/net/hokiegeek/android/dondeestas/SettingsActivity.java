@@ -25,7 +25,7 @@ public class SettingsActivity extends AppCompatActivity
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        // TODO
+        // TODO: Update the summaries of the preferences
         // if (key.equals(SettingsActivity.KEY_SERVER)) {
             // Preference pref = findPreference(key);
             // pref.setSummary(sharedPreferences.getString(key, ""));

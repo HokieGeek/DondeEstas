@@ -12,8 +12,16 @@ public class User {
 
     private Person person;
 
-    public User(Person p) {
+    private Model model;
+
+    public User(Person p, Model m) {
         person = p;
+        model = m;
+    }
+
+    private void setPerson(Person p) {
+        person = p;
+        model.updatePerson(person);
     }
 
     public String getId() {
@@ -40,54 +48,52 @@ public class User {
         return person.getFollowing();
     }
 
-    public Person getPerson() { return person; }
-
     public void setId(String id) {
         PersonBuilder params = person.params.clone();
         params.id(id);
-        person = params.build();
+        setPerson(params.build());
     }
 
     public void setName(String n) {
         PersonBuilder params = person.params.clone();
         params.name(n);
-        person = params.build();
+        setPerson(params.build());
     }
 
     public void setPosition(Position p) {
         Log.v(TAG, "TODO: updatePosition");
         PersonBuilder params = person.params.clone();
         params.position(p);
-        person = params.build();
+        setPerson(params.build());
     }
 
     public void setVisible(Boolean v) {
         PersonBuilder params = person.params.clone();
         params.visible(v);
-        person = params.build();
+        setPerson(params.build());
     }
 
     public void setFollowing(List<String> ids) {
         PersonBuilder params = person.params.clone();
         params.following(ids);
-        person = params.build();
+        setPerson(params.build());
     }
 
     public void addFollowing(String id) {
         PersonBuilder params = person.params.clone();
         params.following(id);
-        person = params.build();
+        setPerson(params.build());
     }
 
     public void setWhitelist(List<String> ids) {
         PersonBuilder params = person.params.clone();
         params.whitelist(ids);
-        person = params.build();
+        setPerson(params.build());
     }
 
     public void addWhitelist(String id) {
         PersonBuilder params = person.params.clone();
         params.whitelist(id);
-        person = params.build();
+        setPerson(params.build());
     }
 }

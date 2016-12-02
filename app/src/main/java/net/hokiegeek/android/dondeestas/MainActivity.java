@@ -3,6 +3,7 @@ package net.hokiegeek.android.dondeestas;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -63,8 +64,6 @@ public class MainActivity extends AppCompatActivity
 
     private Model dataModel;
 
-    private boolean requestingLocationUpdates;
-
     private LocationPublisher locationPublisher;
 
     private User user;
@@ -104,10 +103,10 @@ public class MainActivity extends AppCompatActivity
         // Update the user
         Person user = dataModel.getPersonById(userId);
         if (user != null) {
-            this.user = new User(user);
+            this.user = new User(user, dataModel);
         }
 
-        requestingLocationUpdates = user.getVisible(); // TODO: Read this from the data model
+        // TODO: Set the visibility toggle
     }
 
     @Override
@@ -131,11 +130,32 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    private void enableLocationUpdates(boolean enable, MenuItem item) {
+        String message = "";
+        int icon = -1;
+        if (enable) {
+            message = "Reporting location";
+            locationPublisher.start();
+            icon = R.drawable.ic_action_visibility;
+        } else {
+            message = "Not reporting location";
+            locationPublisher.stop();
+            icon = R.drawable.ic_action_visibility_off;
+        }
+
+        item.setChecked(enable);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            item.setIcon(getResources().getDrawable(icon, this.getTheme()));
+        } else {
+            item.setIcon(getResources().getDrawable(icon));
+        }
+
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
@@ -143,21 +163,8 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
             return true;
         } else if (id == R.id.action_visibility) {
-            requestingLocationUpdates = !requestingLocationUpdates;
-            String message = "";
-            if (requestingLocationUpdates) {
-                message = "Reporting location";
-                locationPublisher.start();
-                item.setChecked(true);
-                // TODO: "enable" the button
-            } else {
-                message = "Not reporting location";
-                locationPublisher.stop();
-                item.setChecked(false);
-                // TODO: "disable" the button
-            }
-
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            user.setVisible(!user.getVisible());
+            enableLocationUpdates(user.getVisible(), item);
             return true;
         }
 
@@ -203,7 +210,7 @@ public class MainActivity extends AppCompatActivity
         if (key.equals(KEY_SERVER) || key.equals(KEY_USER_ID)) {
             initializeData(sharedPreferences.getString(KEY_SERVER, ""), sharedPreferences.getString(KEY_USER_ID, ""));
         } else if (key.equals(KEY_USER_NAME)) {
-            // TODO: Update in the database
+            user.setName(sharedPreferences.getString(KEY_USER_NAME, ""));
         }
     }
 
@@ -213,7 +220,6 @@ public class MainActivity extends AppCompatActivity
         Toast.makeText(this, Util.LocationToPosition(location).toString(), Toast.LENGTH_SHORT).show();
 
         user.setPosition(Util.LocationToPosition(location));
-        dataModel.updatePerson(user.getPerson());
     }
 
     /**

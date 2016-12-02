@@ -126,13 +126,13 @@ public class LocationPublisher
 
     @Override
     public void onConnectionSuspended(int i) {
-        // TODO
+        // TODO: implement onConnectionSuspended?
         Log.v(TAG, "onConnectionSuspended()");
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        // TODO
+        // TODO: implement onConnectionFailed?
         Log.v(TAG, "onConnectionFailed()");
     }
 
