@@ -7,7 +7,9 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -16,8 +18,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-
-import java.util.function.Consumer;
 
 /**
  * Created by andres on 11/29/16.
@@ -37,11 +37,11 @@ public class LocationPublisher
 
     private Context context;
 
-    private Consumer<Location> updateFunc;
+    private LocationListener listener;
 
-    public LocationPublisher(Context parent, Consumer<Location> update) {
+    public LocationPublisher(AppCompatActivity parent) {
         context = parent;
-        updateFunc = update;
+        listener = (LocationListener)parent;
 
         locationRequest = new LocationRequest();
         locationRequest.setInterval(10000);
@@ -138,9 +138,7 @@ public class LocationPublisher
 
     @Override
     public void onLocationChanged(Location location) {
-        // TODO
-        Toast.makeText(context, location.toString(), Toast.LENGTH_SHORT).show();
-        updatefunc.accept(location)
+        listener.onLocationChanged(location);
     }
 
 }

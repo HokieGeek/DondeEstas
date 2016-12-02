@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class DummyDataSource implements DataSource {
 
-    private Map<Integer, Person> people;
+    private Map<String, Person> people;
 
     private List<DataUpdateListener> listeners;
 
@@ -25,13 +25,13 @@ public class DummyDataSource implements DataSource {
 
         List<Person> people = new ArrayList<>();
         people.add(new PersonBuilder()
-                .id(1)
+                .id("One")
                 .name("Keri")
                 .position(new Date(), 39.189658, -77.279528, 0.0)
                 .build());
 
         people.add(new PersonBuilder()
-                .id(2)
+                .id("Two")
                 .name("Olivia")
                 .position(new Date(), 39.1888622, -77.287454, 0.0)
                 .build());
@@ -99,12 +99,9 @@ public class DummyDataSource implements DataSource {
 
     private void fireOnDataSourceUpdate() {
         synchronized (listeners) {
-            listeners.foreach(l -> l.onDataUpdate());
-            /* TODO: remove?
             for (DataUpdateListener l : listeners) {
                 l.onDataUpdate();
             }
-            */
         }
     }
 
@@ -117,18 +114,11 @@ public class DummyDataSource implements DataSource {
     public List<Person> getPeopleByIdList(List<String> ids) {
         List<Person> l = new ArrayList<>();
         synchronized (people) {
-            ids.foreach(id -> {
-                if (people.containsKey(id)) {
-                    l.add(people.get(id));
-                }
-            });
-            /* TODO: remove?
             for (String id : ids) {
                 if (people.containsKey(id)) {
                     l.add(people.get(id));
                 }
             }
-            */
         }
         return l;
     }
@@ -144,7 +134,7 @@ public class DummyDataSource implements DataSource {
     }
 
     @Override
-    public boolean updatePerson(p Person) {
+    public boolean updatePerson(Person p) {
         // TODO: ??
         return false;
     }

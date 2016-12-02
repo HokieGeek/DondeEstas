@@ -1,5 +1,9 @@
 package net.hokiegeek.android.dondeestas.data;
 
+import android.util.Log;
+
+import java.util.List;
+
 /**
  * Created by andres on 12/01/16.
  */
@@ -36,6 +40,8 @@ public class User {
         return person.getFollowing();
     }
 
+    public Person getPerson() { return person; }
+
     public void setId(String id) {
         PersonBuilder params = person.params.clone();
         params.id(id);
@@ -57,7 +63,7 @@ public class User {
 
     public void setVisible(Boolean v) {
         PersonBuilder params = person.params.clone();
-        params.position(v);
+        params.visible(v);
         person = params.build();
     }
 

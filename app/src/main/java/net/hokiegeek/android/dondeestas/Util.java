@@ -1,5 +1,7 @@
 package net.hokiegeek.android.dondeestas;
 
+import android.location.Location;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -14,9 +16,9 @@ import java.util.List;
  */
 
 public final class Util {
-    public static final Postion LocationToPosition(Location l) {
+    public static final Position LocationToPosition(Location l) {
         // TODO
-        return new Position();
+        return null;
     }
     public static final LatLng PositionToLatLng(Position p) {
         return new LatLng(p.latitude, p.longitude);

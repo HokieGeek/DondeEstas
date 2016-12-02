@@ -15,7 +15,7 @@ public interface DataSource {
 
     Person getPersonById(String id);
 
-    boolean updatePerson(p Person);
+    boolean updatePerson(Person p);
 
     void addListener(DataUpdateListener l);
 

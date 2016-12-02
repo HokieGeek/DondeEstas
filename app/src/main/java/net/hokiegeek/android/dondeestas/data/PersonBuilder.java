@@ -29,8 +29,9 @@ public class PersonBuilder {
             return new Person(this);
         }
 
-        public Person clone() {
+        public PersonBuilder clone() {
             // TODO
+            return new PersonBuilder();
         }
 
         public PersonBuilder id(String id) {

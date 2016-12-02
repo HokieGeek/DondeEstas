@@ -1,10 +1,12 @@
 package net.hokiegeek.android.dondeestas;
 
+import android.content.SharedPreferences;
+import android.preference.Preference;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 public class SettingsActivity extends AppCompatActivity
-    implements OnSharedPreferenceChangeListener
+    implements SharedPreferences.OnSharedPreferenceChangeListener
 {
 
     public static final String KEY_SERVER = "pref_server";
@@ -23,9 +25,10 @@ public class SettingsActivity extends AppCompatActivity
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        // TODO
         // if (key.equals(SettingsActivity.KEY_SERVER)) {
-            Preference pref = findPreference(key);
-            pref.setSummary(sharedPreferences.getString(key, ""));
+            // Preference pref = findPreference(key);
+            // pref.setSummary(sharedPreferences.getString(key, ""));
         // }
     }
 }

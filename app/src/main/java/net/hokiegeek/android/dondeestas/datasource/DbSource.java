@@ -21,7 +21,7 @@ public class DbSource implements DataSource {
 
     private String url;
 
-    private DbSource(String dbUrl) {
+    public DbSource(String dbUrl) {
         this.url = dbUrl;
         this.listeners = new ArrayList<>();
     }
@@ -72,7 +72,7 @@ public class DbSource implements DataSource {
     }
 
     @Override
-    public boolean updatePerson(p Person) {
+    public boolean updatePerson(Person p) {
         // TODO: ??
         return false;
     }

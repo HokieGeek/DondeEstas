@@ -8,7 +8,7 @@ import java.util.List;
  * Created by andres on 11/23/16.
  */
 public class Person {
-    private final PersonBuilder params;
+    protected final PersonBuilder params;
 
     public Person(PersonBuilder params) {
         this.params = params;

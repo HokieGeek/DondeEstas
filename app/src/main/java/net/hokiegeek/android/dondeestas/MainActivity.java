@@ -1,6 +1,9 @@
 package net.hokiegeek.android.dondeestas;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.location.Location;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,17 +20,25 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import net.hokiegeek.android.dondeestas.data.Model;
+import net.hokiegeek.android.dondeestas.data.Person;
+import net.hokiegeek.android.dondeestas.data.User;
 import net.hokiegeek.android.dondeestas.datasource.DataSource;
 import net.hokiegeek.android.dondeestas.datasource.DataUpdateListener;
+import net.hokiegeek.android.dondeestas.datasource.DbSource;
 import net.hokiegeek.android.dondeestas.datasource.DummyDataSource;
 import net.hokiegeek.android.dondeestas.dummy.DummyContent;
+
+import com.google.android.gms.location.LocationListener;
+
+import static net.hokiegeek.android.dondeestas.SettingsActivity.*;
 
 public class MainActivity extends AppCompatActivity
         implements
         MapFragment.OnFragmentLoadedListener,
         PersonFragment.OnListFragmentInteractionListener,
         DataUpdateListener,
-        OnSharedPreferenceChangeListener
+        SharedPreferences.OnSharedPreferenceChangeListener,
+        LocationListener
 {
     private static final String TAG = "DONDE";
 
@@ -77,18 +88,14 @@ public class MainActivity extends AppCompatActivity
         tabLayout.setupWithViewPager(mViewPager);
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String dbServer = sharedPref.getString(SettingsActivity.KEY_SERVER, "");
-        String userId = sharedPref.getString(SettingsActivity.KEY_USER_ID, "");
+        String dbServer = sharedPref.getString(KEY_SERVER, "");
+        String userId = sharedPref.getString(KEY_USER_ID, "");
 
         initializeData(dbServer, userId);
     }
 
     protected void initializeData(String dbServer, String userId) {
-        locationPublisher = new LocationPublisher(this, loc -> {
-            Log.v(TAG, "Location: "+loc.toString());
-            user.updatePosition(Util.LocationToPosition(loc));
-            dataModel.updatePerson(user);
-        });
+        locationPublisher = new LocationPublisher(this);
 
         // Setup the data model
         DataSource db = new DbSource(dbServer);
@@ -99,7 +106,8 @@ public class MainActivity extends AppCompatActivity
         if (user != null) {
             this.user = new User(user);
         }
-        requestingLocationUpdates = user.getVisibility(); // TODO: Read this from the data model
+
+        requestingLocationUpdates = user.getVisible(); // TODO: Read this from the data model
     }
 
     @Override
@@ -192,11 +200,19 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(SettingsActivity.KEY_SERVER) || key.equals(SettingsActivity.KEY_USER_ID) {
-            initializeData(sharedPreferences.getString(SettingsActivity.KEY_SERVER), sharedPreferences.getString(SettingsActivity.KEY_USER_ID))
-        } else if (key.equals(SettingsActivity.KEY_USER_NAME)) {
+        if (key.equals(KEY_SERVER) || key.equals(KEY_USER_ID)) {
+            initializeData(sharedPreferences.getString(KEY_SERVER, ""), sharedPreferences.getString(KEY_USER_ID, ""));
+        } else if (key.equals(KEY_USER_NAME)) {
             // TODO: Update in the database
         }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.v(TAG, "Location: "+location.toString());
+        Toast.makeText(this, location.toString(), Toast.LENGTH_SHORT).show();
+        user.setPosition(Util.LocationToPosition(location));
+        dataModel.updatePerson(user.getPerson());
     }
 
     /**
