@@ -105,9 +105,6 @@ public class MainActivity extends AppCompatActivity
         if (user != null) {
             this.user = new User(user, dataModel);
         }
-
-        // Set the visibility toggle
-        invalidateOptionsMenu();
     }
 
     @Override
@@ -128,10 +125,11 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        controlLocationUpdates(user.getVisible(), menu.findItem(R.id.action_visibility));
         return true;
     }
 
-    private void enableLocationUpdates(boolean enable, MenuItem item) {
+    private void controlLocationUpdates(boolean enable, MenuItem item) {
         String message = "";
         int icon = -1;
         if (enable) {
@@ -144,7 +142,7 @@ public class MainActivity extends AppCompatActivity
             icon = R.drawable.ic_action_visibility_off;
         }
 
-        item.setChecked(enable);
+        // item.setChecked(enable);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             item.setIcon(getResources().getDrawable(icon, this.getTheme()));
@@ -164,8 +162,9 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
             return true;
         } else if (id == R.id.action_visibility) {
+            Log.v(TAG, "Checked?: "+item.isChecked());
             user.setVisible(!user.getVisible());
-            enableLocationUpdates(user.getVisible(), item);
+            controlLocationUpdates(user.getVisible(), item);
             return true;
         }
 
