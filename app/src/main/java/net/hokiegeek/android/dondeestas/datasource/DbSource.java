@@ -10,7 +10,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -41,8 +45,14 @@ public class DbSource implements DataSource {
     @Override
     public List<Person> getPeopleByIdList(List<String> ids) {
         Log.v(TAG, "getPeopleByIdList()");
-        JSONObject resp = this.req(PATH_GET_PERSON, createPersonDataRequest(ids));
-        return this.getPersonListFromJson(resp);
+        Response resp = this.req(PATH_GET_PERSON, createPersonDataRequest(ids));
+        JSONObject json = null;
+        try {
+            json = new JSONObject(resp.Body);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return this.getPersonListFromJson(json);
     }
 
     @Override
@@ -59,16 +69,18 @@ public class DbSource implements DataSource {
     @Override
     public boolean updatePerson(Person p) {
         Log.v(TAG, "updatePerson()");
-        JSONObject resp = this.req(PATH_UPDATE_LOCATION, Util.PersonToJson(p));
-        return true; // TODO: make this a real value based on the response
+        Response resp = this.req(PATH_UPDATE_LOCATION, Util.PersonToJson(p));
+        return (resp.StatusCode == 200 || resp.StatusCode == 201);
     }
 
     protected List<Person> getPersonListFromJson(JSONObject j) {
         List<Person> p = new ArrayList<>();
         try {
-            JSONArray a = j.getJSONArray("People");
-            for (int i = 0; i < a.length(); i++) {
-                p.add(Util.PersonFromJson(a.getJSONObject(i)));
+            if (j != null) {
+                JSONArray a = j.getJSONArray("People");
+                for (int i = 0; i < a.length(); i++) {
+                    p.add(Util.PersonFromJson(a.getJSONObject(i)));
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -92,7 +104,8 @@ public class DbSource implements DataSource {
         }
     }
 
-    protected JSONObject req(String path, JSONObject data) {
+    protected Response req(String path, JSONObject data) {
+        Response resp = new Response();
         HttpURLConnection connection = null;
         try {
             // URL url = new URL("http://requestb.in/18xm5rg1");//+PATH_SEP+path);
@@ -109,7 +122,19 @@ public class DbSource implements DataSource {
             osw.flush();
             osw.close();
 
-            Log.v(TAG, "STATUS: "+connection.getResponseMessage());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder result = new StringBuilder();
+            String line;
+            while((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+
+            resp.StatusCode = connection.getResponseCode();
+            resp.StatusMessage = connection.getResponseMessage();
+            resp.Body = result.toString();
+
+            Log.v(TAG, resp.Body);
+            Log.v(TAG, "STATUS: "+resp.StatusMessage);
         } catch (MalformedURLException e) {
             Log.v(TAG, "ERROR: URL: "+this.url);
         } catch (IOException e) {
@@ -123,7 +148,13 @@ public class DbSource implements DataSource {
             if (connection != null) {
                 connection.disconnect();
             }
+            return resp;
         }
-        return null;
+    }
+
+    private class Response {
+        public int StatusCode;
+        public String StatusMessage;
+        public String Body;
     }
 }
