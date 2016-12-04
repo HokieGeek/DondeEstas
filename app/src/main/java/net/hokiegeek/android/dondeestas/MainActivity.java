@@ -21,12 +21,9 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import net.hokiegeek.android.dondeestas.data.Model;
-import net.hokiegeek.android.dondeestas.data.Person;
-import net.hokiegeek.android.dondeestas.data.User;
 import net.hokiegeek.android.dondeestas.datasource.DataSource;
 import net.hokiegeek.android.dondeestas.datasource.DataUpdateListener;
 import net.hokiegeek.android.dondeestas.datasource.DbSource;
-import net.hokiegeek.android.dondeestas.datasource.DummyDataSource;
 import net.hokiegeek.android.dondeestas.dummy.DummyContent;
 
 import com.google.android.gms.location.LocationListener;
@@ -66,8 +63,6 @@ public class MainActivity extends AppCompatActivity
 
     private LocationPublisher locationPublisher;
 
-    private User user;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,21 +85,19 @@ public class MainActivity extends AppCompatActivity
         String dbServer = sharedPref.getString(KEY_SERVER, "");
         String userId = sharedPref.getString(KEY_USER_ID, "");
 
+        locationPublisher = new LocationPublisher(this);
+
         initializeData(dbServer, userId);
     }
 
     protected void initializeData(String dbServer, String userId) {
-        locationPublisher = new LocationPublisher(this);
-
         // Setup the data model
-        DataSource db = new DbSource(dbServer);
-        dataModel = new Model(db);
-
-        // Update the user
-        Person user = dataModel.getPersonById(userId);
-        if (user != null) {
-            this.user = new User(user, dataModel);
+        // TODO: There has got to be a better way...
+        if (!"http".equals(dbServer.substring(0,3))) {
+            dbServer = "http://" + dbServer;
         }
+        DataSource db = new DbSource(dbServer);
+        dataModel = new Model(db, userId);
     }
 
     @Override
@@ -112,6 +105,12 @@ public class MainActivity extends AppCompatActivity
         Log.v(TAG, "onStart()");
         locationPublisher.start();
         super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        Log.v(TAG, "onResume()");
+        super.onResume();
     }
 
     @Override
@@ -125,7 +124,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        controlLocationUpdates(user.getVisible(), menu.findItem(R.id.action_visibility));
+        controlLocationUpdates(dataModel.getVisible(), menu.findItem(R.id.action_visibility));
         return true;
     }
 
@@ -163,8 +162,8 @@ public class MainActivity extends AppCompatActivity
             return true;
         } else if (id == R.id.action_visibility) {
             Log.v(TAG, "Checked?: "+item.isChecked());
-            user.setVisible(!user.getVisible());
-            controlLocationUpdates(user.getVisible(), item);
+            dataModel.setVisible(!dataModel.getVisible());
+            controlLocationUpdates(dataModel.getVisible(), item);
             return true;
         }
 
@@ -192,13 +191,15 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onDataUpdate() {
+        Log.v(TAG, "onDataUpdate()");
+        invalidateOptionsMenu();
         this.updateFragments();
     }
 
     private void updateFragments() {
         Log.v(TAG, "updateFragments()");
         if (mapFragment != null) {
-            mapFragment.updateMarkers(Util.PersonListToMarkerOptionList(dataModel.getPeople()));
+            mapFragment.updateMarkers(Util.PersonListToMarkerOptionList(dataModel.getFollowing()));
             mapFragment.zoomToMarkers();
         }
 
@@ -209,8 +210,8 @@ public class MainActivity extends AppCompatActivity
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(KEY_SERVER) || key.equals(KEY_USER_ID)) {
             initializeData(sharedPreferences.getString(KEY_SERVER, ""), sharedPreferences.getString(KEY_USER_ID, ""));
-        } else if (key.equals(KEY_USER_NAME)) {
-            user.setName(sharedPreferences.getString(KEY_USER_NAME, ""));
+        // } else if (key.equals(KEY_USER_NAME)) {
+        //     dataModel.setName(sharedPreferences.getString(KEY_USER_NAME, ""));
         }
     }
 
@@ -219,7 +220,7 @@ public class MainActivity extends AppCompatActivity
         Log.v(TAG, "Location: "+location.toString());
         Toast.makeText(this, Util.LocationToPosition(location).toString(), Toast.LENGTH_SHORT).show();
 
-        user.setPosition(Util.LocationToPosition(location));
+        dataModel.setPosition(Util.LocationToPosition(location));
     }
 
     /**

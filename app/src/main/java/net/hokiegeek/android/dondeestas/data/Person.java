@@ -14,6 +14,8 @@ public class Person {
         this.params = params;
     }
 
+    public Person clone() { return this.params.clone().build(); }
+
     public String getId() {
         return params.id;
     }

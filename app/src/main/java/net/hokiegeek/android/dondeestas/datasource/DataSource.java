@@ -9,15 +9,7 @@ import java.util.List;
  */
 
 public interface DataSource {
-    List<Person> getPeople();
-
     List<Person> getPeopleByIdList(List<String> ids);
-
     Person getPersonById(String id);
-
     boolean updatePerson(Person p);
-
-    void addListener(DataUpdateListener l);
-
-    boolean removeListener(DataUpdateListener l);
 }

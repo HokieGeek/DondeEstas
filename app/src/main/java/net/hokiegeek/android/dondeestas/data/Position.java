@@ -23,6 +23,10 @@ public class Position {
         this.elevation = elevation;
     }
 
+    public Position clone() {
+        return new Position(this.tov, this.latitude, this.longitude, this.elevation);
+    }
+
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();

@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,11 +32,13 @@ public final class Util {
 
     public static final JSONObject PositionToJson(Position p) {
         JSONObject j = new JSONObject();
+        // SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
         try {
             j.put("latitude", p.latitude);
             j.put("longitude", p.longitude);
             j.put("elevation", p.longitude);
-            j.put("tov", p.tov); // Does this work?
+            j.put("tov", fmt.format(p.tov));
         } catch (JSONException e) {
             e.printStackTrace();
         } finally {
@@ -113,7 +116,7 @@ public final class Util {
 
     public static final MarkerOptions PersonToMarkerOption(Person p) {
         return new MarkerOptions().position(PositionToLatLng(p.getPosition()))
-                    .title(p.getName());
+                    .title(p.getId()); // TODO: use name?
     }
 
     public static final List<MarkerOptions> PersonListToMarkerOptionList(List<Person> people) {

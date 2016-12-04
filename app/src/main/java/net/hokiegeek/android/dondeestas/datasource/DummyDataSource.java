@@ -17,11 +17,8 @@ public class DummyDataSource implements DataSource {
 
     private Map<String, Person> people;
 
-    private List<DataUpdateListener> listeners;
-
     private DummyDataSource() {
         people = new HashMap<>();
-        listeners = new ArrayList<>();
 
         List<Person> people = new ArrayList<>();
         people.add(new PersonBuilder()
@@ -44,70 +41,13 @@ public class DummyDataSource implements DataSource {
     }
 
     public void updatePeople(List<Person> newPeople) {
-        boolean updated = false;
         if (newPeople != null) {
             for (Person p : newPeople) {
                 if (p != null) {
                     people.put(p.getId(), p);
-                    updated = true;
                 }
             }
         }
-        if (updated) {
-            fireOnDataSourceUpdate();
-        }
-    }
-
-    @Override
-    public void addListener(DataUpdateListener l) {
-        synchronized (listeners) {
-            if (!listeners.contains(l)) {
-                listeners.add(l);
-            }
-        }
-
-        /*
-        new java.util.Timer().schedule(
-                new java.util.TimerTask() {
-                    @Override
-                    public void run() {
-                        List<Person> people = new ArrayList<>();
-                        people.add(new PersonBuilder()
-                                .id(0)
-                                .name("Andres")
-                                .position(38.975095, -77.195674, 0.0)
-                                .build());
-
-                        updatePeople(people);
-                    }
-                },
-                20000
-        );
-        */
-    }
-
-    @Override
-    public boolean removeListener(DataUpdateListener l) {
-        synchronized (listeners) {
-            if (listeners.contains(l)) {
-                listeners.remove(l);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void fireOnDataSourceUpdate() {
-        synchronized (listeners) {
-            for (DataUpdateListener l : listeners) {
-                l.onDataUpdate();
-            }
-        }
-    }
-
-    @Override
-    public List<Person> getPeople() {
-        return new ArrayList<>(people.values());
     }
 
     @Override

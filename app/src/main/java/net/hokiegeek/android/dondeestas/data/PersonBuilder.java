@@ -30,8 +30,18 @@ public class PersonBuilder {
         }
 
         public PersonBuilder clone() {
-            // TODO: Implement clone()
-            return new PersonBuilder();
+            PersonBuilder c = new PersonBuilder();
+            c.id = this.id;
+            c.name = this.name;
+            c.position = this.position.clone();
+            c.visible = this.visible;
+            for (int i = 0; i < this.whitelist.size(); i++) {
+                c.whitelist.add(this.whitelist.get(i)) ;
+            }
+            for (int i = 0; i < this.following.size(); i++) {
+                c.following.add(this.following.get(i)) ;
+            }
+            return c;
         }
 
         public PersonBuilder id(String id) {
