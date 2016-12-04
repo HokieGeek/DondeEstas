@@ -129,14 +129,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void controlLocationUpdates(boolean enable, MenuItem item) {
-        String message = "";
+        // String message = "";
         int icon = -1;
         if (enable) {
-            message = "Reporting location";
+            // message = "Reporting location";
             locationPublisher.start();
             icon = R.drawable.ic_action_visibility;
         } else {
-            message = "Not reporting location";
+            // message = "Not reporting location";
             locationPublisher.stop();
             icon = R.drawable.ic_action_visibility_off;
         }
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity
             item.setIcon(getResources().getDrawable(icon));
         }
 
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -218,7 +218,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onLocationChanged(Location location) {
         Log.v(TAG, "Location: "+location.toString());
-        Toast.makeText(this, Util.LocationToPosition(location).toString(), Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, Util.LocationToPosition(location).toString(), Toast.LENGTH_SHORT).show();
 
         dataModel.setPosition(Util.LocationToPosition(location));
     }

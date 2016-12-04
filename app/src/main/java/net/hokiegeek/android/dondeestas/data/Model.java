@@ -91,13 +91,42 @@ public class Model {
         }
     }
 
+    private void updateUser(Person p) {
+        Log.v(TAG, "Model.updateUser()");
+        // synchronized (user) {
+            // user = p.clone();
+            new PersonUpdateTask().execute(p.clone());
+            /*
+            if (user.getFollowing().size() > 0) {
+                new GetFollowingTask().execute(user.getFollowing());
+            }
+            if (user.getWhitelist().size() > 0) {
+                new GetWhitelistTask().execute(user.getWhitelist());
+            }
+            */
+        // }
+        // fireOnDataUpdate();
+    }
+
     private void setUser(Person p) {
         Log.v(TAG, "Model.setUser()");
-        synchronized (user) {
+        // This is awkward
+        if (user == null) {
             user = p.clone();
-            new PersonUpdateTask().execute(user);
-            new GetFollowingTask().execute(user.getFollowing());
-            new GetWhitelistTask().execute(user.getWhitelist());
+        } else {
+            synchronized (user) {
+                user = p.clone();
+            }
+        }
+
+        synchronized (user) {
+            // TODO: new PersonUpdateTask().execute(user);
+            if (user.getFollowing().size() > 0) {
+                new GetFollowingTask().execute(user.getFollowing());
+            }
+            if (user.getWhitelist().size() > 0) {
+                new GetWhitelistTask().execute(user.getWhitelist());
+            }
         }
         fireOnDataUpdate();
     }
@@ -106,24 +135,26 @@ public class Model {
         if (user != null) {
             PersonBuilder params = user.params.clone();
             params.name(n);
-            setUser(params.build());
+            updateUser(params.build());
         }
     }
 
     public void setPosition(Position p) {
+        Log.v(TAG, "Model.setPosition(): "+p.toString());
         if (user != null) {
-            Log.v(TAG, "Model.setPosition()");
             PersonBuilder params = user.params.clone();
-            params.position(p);
-            setUser(params.build());
+            params.position(p.clone());
+            updateUser(params.build());
         }
     }
 
     public void setVisible(Boolean v) {
+        Log.v(TAG, "Model.setVisible()");
         if (user != null) {
+            Log.v(TAG, "Model.setVisible(): HERE");
             PersonBuilder params = user.params.clone();
             params.visible(v);
-            setUser(params.build());
+            updateUser(params.build());
         }
     }
 
@@ -131,7 +162,7 @@ public class Model {
         if (user != null) {
             PersonBuilder params = user.params.clone();
             params.following(ids);
-            setUser(params.build());
+            updateUser(params.build());
         }
     }
 
@@ -139,7 +170,7 @@ public class Model {
         if (user != null) {
             PersonBuilder params = user.params.clone();
             params.following(id);
-            setUser(params.build());
+            updateUser(params.build());
         }
     }
 
@@ -147,7 +178,7 @@ public class Model {
         if (user != null) {
             PersonBuilder params = user.params.clone();
             params.whitelist(ids);
-            setUser(params.build());
+            updateUser(params.build());
         }
     }
 
@@ -155,14 +186,29 @@ public class Model {
         if (user != null) {
             PersonBuilder params = user.params.clone();
             params.whitelist(id);
-            setUser(params.build());
+            updateUser(params.build());
         }
     }
 
     private class PersonUpdateTask extends AsyncTask<Person, Void, Boolean> {
+        private Person p;
+
         @Override
         protected Boolean doInBackground(Person... params) {
-            return dataSource.updatePerson(params[0]);
+            Log.v(TAG, "PersonUpdateTask.doInBackground()");
+            p = params[0];
+            return dataSource.updatePerson(p);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean updated) {
+            Log.v(TAG, "PersonUpdateTask.onPostExecute()");
+            if (updated) {
+                setUser(this.p);
+            } else {
+                Log.d(TAG, "PersonUpdateTask.onPostExecute(): User was not updated");
+            }
+            super.onPostExecute(updated);
         }
     }
 
@@ -179,21 +225,10 @@ public class Model {
         protected void onPostExecute(Person person) {
             Log.v(TAG, "GetUserTask.onPostExecute()");
             if (person != null) {
-                // This is awkward
-                if (user == null) {
-                    user = person;
-                } else {
-                    synchronized (user) {
-                        user = person;
-                    }
-                }
-
-                synchronized (user) {
-                    new GetFollowingTask().execute(user.getFollowing());
-                    new GetWhitelistTask().execute(user.getWhitelist());
-                }
-                fireOnDataUpdate();
+                Log.v(TAG, "GetUserTask.onPostExecute(): Retrieved existing");
+                setUser(person);
             } else {
+                Log.v(TAG, "GetUserTask.onPostExecute(): Creating a new Person");
                 new PersonUpdateTask().execute(new PersonBuilder().id(requestedId).build());
             }
             super.onPostExecute(person);

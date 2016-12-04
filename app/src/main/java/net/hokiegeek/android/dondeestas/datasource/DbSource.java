@@ -51,7 +51,6 @@ public class DbSource implements DataSource {
         List<Person> people = this.getPeopleByIdList(Arrays.asList(id));
         if (people.isEmpty()) {
             return null;
-            // return new PersonBuilder().build(); // TODO: debug only
         } else {
             return people.get(0);
         }
@@ -61,7 +60,7 @@ public class DbSource implements DataSource {
     public boolean updatePerson(Person p) {
         Log.v(TAG, "updatePerson()");
         JSONObject resp = this.req(PATH_UPDATE_LOCATION, Util.PersonToJson(p));
-        return false;
+        return true; // TODO: make this a real value based on the response
     }
 
     protected List<Person> getPersonListFromJson(JSONObject j) {

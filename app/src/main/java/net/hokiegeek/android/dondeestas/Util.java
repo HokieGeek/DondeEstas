@@ -32,7 +32,6 @@ public final class Util {
 
     public static final JSONObject PositionToJson(Position p) {
         JSONObject j = new JSONObject();
-        // SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
         try {
             j.put("latitude", p.latitude);
