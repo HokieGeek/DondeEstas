@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity
             isConfigured = false;
             // Intent intent = new Intent(this, SettingsActivity.class);
             // startActivity(intent);
-            dbServer = "http://hokiegeek:8585";
+            dbServer = "http://hokiegeek.net:8585";
             userId = "andres";
             initializeData(dbServer, userId);
         } else {
