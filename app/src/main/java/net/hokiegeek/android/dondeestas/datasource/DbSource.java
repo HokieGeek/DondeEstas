@@ -4,16 +4,13 @@ import android.util.Log;
 
 import net.hokiegeek.android.dondeestas.Util;
 import net.hokiegeek.android.dondeestas.data.Person;
-import net.hokiegeek.android.dondeestas.data.PersonBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -21,7 +18,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -47,10 +43,14 @@ public class DbSource implements DataSource {
         Log.v(TAG, "getPeopleByIdList()");
         Response resp = this.req(PATH_GET_PERSON, createPersonDataRequest(ids));
         JSONObject json = null;
-        try {
-            json = new JSONObject(resp.Body);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (resp.Body == null || "".equals(resp.Body)) {
+            Log.d(TAG, "getPeopleByIdList(): Body is empty!");
+        } else {
+            try {
+                json = new JSONObject(resp.Body);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
         return this.getPersonListFromJson(json);
     }

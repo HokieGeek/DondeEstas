@@ -63,6 +63,8 @@ public class MainActivity extends AppCompatActivity
 
     private LocationPublisher locationPublisher;
 
+    private Boolean isConfigured;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,15 +87,29 @@ public class MainActivity extends AppCompatActivity
         String dbServer = sharedPref.getString(KEY_SERVER, "");
         String userId = sharedPref.getString(KEY_USER_ID, "");
 
-        locationPublisher = new LocationPublisher(this);
-
-        initializeData(dbServer, userId);
+        // TODO: popup settings when have no prefs
+        if ("".equals(dbServer) || "".equals(userId)) {
+            isConfigured = false;
+            // Intent intent = new Intent(this, SettingsActivity.class);
+            // startActivity(intent);
+            dbServer = "http://hokiegeek:8585";
+            userId = "andres";
+            initializeData(dbServer, userId);
+        } else {
+            isConfigured = true;
+            initializeData(dbServer, userId);
+        }
     }
 
     protected void initializeData(String dbServer, String userId) {
+        if (locationPublisher == null) {
+            locationPublisher = new LocationPublisher(this);
+        }
+
         // Setup the data model
         // TODO: There has got to be a better way...
-        if (!"http".equals(dbServer.substring(0,3))) {
+        Log.v(TAG, "dbServer = "+dbServer.substring(0,4));
+        if (!"http".equals(dbServer.substring(0,4))) {
             dbServer = "http://" + dbServer;
         }
         DataSource db = new DbSource(dbServer);
@@ -103,7 +119,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         Log.v(TAG, "onStart()");
-        locationPublisher.start();
+        if (locationPublisher != null) {
+            locationPublisher.start();
+        }
         super.onStart();
     }
 
@@ -116,7 +134,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         Log.v(TAG, "onStop()");
-        locationPublisher.stop();
+        if (locationPublisher != null) {
+            locationPublisher.stop();
+        }
         super.onStop();
     }
 
@@ -133,11 +153,15 @@ public class MainActivity extends AppCompatActivity
         int icon = -1;
         if (enable) {
             // message = "Reporting location";
-            locationPublisher.start();
+            if (locationPublisher != null) {
+                locationPublisher.start();
+            }
             icon = R.drawable.ic_action_visibility;
         } else {
             // message = "Not reporting location";
-            locationPublisher.stop();
+            if (locationPublisher != null) {
+                locationPublisher.stop();
+            }
             icon = R.drawable.ic_action_visibility_off;
         }
 
