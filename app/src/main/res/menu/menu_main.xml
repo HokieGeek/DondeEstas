@@ -6,12 +6,10 @@
         android:id="@+id/action_visibility"
         android:orderInCategory="100"
         android:icon="@drawable/ic_action_visibility"
-        android:title="Toggle Visibility"
-        app:showAsAction="always"
-        android:visible="true"
-        android:enabled="true"
+        android:title="Toggle your Visibility"
         android:checkable="true"
-        android:checked="true" />
+        android:checked="false"
+        app:showAsAction="always" />
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="101"
