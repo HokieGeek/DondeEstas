@@ -9,6 +9,4 @@
     <string name="pref_server_hint">[http://]example.com[:1234]</string>
     <string name="pref_userid_title">User</string>
     <string name="pref_userid_summary">Identifier for the user of this phone</string>
-    <string name="pref_name_title">Name</string>
-    <string name="pref_name_summary">The name which will appear on your marker in other phones</string>
 </resources>

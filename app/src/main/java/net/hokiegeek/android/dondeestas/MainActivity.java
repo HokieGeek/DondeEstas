@@ -234,8 +234,6 @@ public class MainActivity extends AppCompatActivity
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(KEY_SERVER) || key.equals(KEY_USER_ID)) {
             initializeData(sharedPreferences.getString(KEY_SERVER, ""), sharedPreferences.getString(KEY_USER_ID, ""));
-        // } else if (key.equals(KEY_USER_NAME)) {
-        //     dataModel.setName(sharedPreferences.getString(KEY_USER_NAME, ""));
         }
     }
 
