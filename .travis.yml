@@ -2,10 +2,6 @@ language: android
 jdk: oraclejdk8
 android:
   components:
-    # use the latest revision of Android SDK Tools
-    # - platform-tools
-    # - tools
-
     # The BuildTools version used by your project
     - build-tools-24.0.3
 
