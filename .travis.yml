@@ -1,7 +1,7 @@
 language: android
 jdk: oraclejdk8
 before_script:
-    - "echo yes | android update sdk --no-ui --filter build-tools-24.0.3,android-24,extra-android-m2repository"
+    - "echo yes | android update sdk --no-ui --filter build-tools-24.0.3,android-24,extra-android-m2repository,extra-google-m2repository"
 android:
   components:
     - tools
