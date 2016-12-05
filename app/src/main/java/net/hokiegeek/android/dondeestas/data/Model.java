@@ -66,7 +66,11 @@ public class Model {
     public String getName() {
         if (user == null) return "";
         synchronized (user) {
-            return user.getName();
+            if ("".equals(user.getName())) {
+                return user.getId();
+            } else {
+                return user.getName();
+            }
         }
     }
 

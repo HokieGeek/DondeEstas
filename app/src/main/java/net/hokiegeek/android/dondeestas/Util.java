@@ -36,7 +36,7 @@ public final class Util {
         try {
             j.put("latitude", p.latitude);
             j.put("longitude", p.longitude);
-            j.put("elevation", p.longitude);
+            j.put("elevation", p.elevation);
             j.put("tov", fmt.format(p.tov));
         } catch (JSONException e) {
             e.printStackTrace();
@@ -115,7 +115,7 @@ public final class Util {
 
     public static final MarkerOptions PersonToMarkerOption(Person p) {
         return new MarkerOptions().position(PositionToLatLng(p.getPosition()))
-                    .title(p.getId()); // TODO: use name?
+                    .title(p.getName());
     }
 
     public static final List<MarkerOptions> PersonListToMarkerOptionList(List<Person> people) {
