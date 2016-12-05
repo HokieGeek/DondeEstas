@@ -27,18 +27,9 @@ public class DummyContent {
 
     static {
         // Add some sample items.
-        for (int i = 1; i <= COUNT; i++) {
-            addItem(createDummyItem(i));
+        for (int position = 1; position <= COUNT; position++) {
+            addItem(new DummyItem(String.valueOf(position), "Person " + position, makeDetails(position)));
         }
-    }
-
-    private static void addItem(DummyItem item) {
-        ITEMS.add(item);
-        ITEM_MAP.put(item.id, item);
-    }
-
-    private static DummyItem createDummyItem(int position) {
-        return new DummyItem(String.valueOf(position), "Person " + position, makeDetails(position));
     }
 
     private static String makeDetails(int position) {
@@ -48,6 +39,11 @@ public class DummyContent {
             builder.append("\nMore details information here.");
         }
         return builder.toString();
+    }
+
+    private static void addItem(DummyItem item) {
+        ITEMS.add(item);
+        ITEM_MAP.put(item.id, item);
     }
 
     /**
