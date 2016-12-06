@@ -7,16 +7,16 @@ import java.util.Date;
  */
 
 public class Position {
-    public final double latitude;
-    public final double longitude;
-    public final double elevation;
+    public final Double latitude;
+    public final Double longitude;
+    public final Double elevation;
     public final Date tov;
 
-    public Position(Date tov, double latitude, double longitude) {
+    public Position(Date tov, Double latitude, Double longitude) {
         this(tov, latitude, longitude, 0.0);
     }
 
-    public Position(Date tov, double latitude, double longitude, double elevation) {
+    public Position(Date tov, Double latitude, Double longitude, Double elevation) {
         this.tov = (Date)tov.clone();
         this.latitude = latitude;
         this.longitude = longitude;
@@ -24,27 +24,30 @@ public class Position {
     }
 
     public Position clone() {
+        try {
+            super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
         return new Position(this.tov, this.latitude, this.longitude, this.elevation);
     }
 
     @Override
     public String toString() {
-        StringBuilder s = new StringBuilder();
-        s.append(this.latitude);
-        s.append(",");
-        s.append(this.longitude);
-        s.append(",");
-        s.append(this.elevation);
-        return s.toString();
+        String s = "";
+        s += this.latitude + ",";
+        s += this.longitude + ",";
+        s += this.elevation;
+        return s;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o instanceof Position) {
             Position other = (Position)o;
-            return this.latitude == other.latitude &&
-                   this.longitude == other.longitude &&
-                   this.elevation == other.elevation &&
+            return this.latitude.equals(other.latitude) &&
+                   this.longitude.equals(other.longitude) &&
+                   this.elevation.equals(other.elevation) &&
                    this.tov.equals(other.tov);
         } else {
             return false;
