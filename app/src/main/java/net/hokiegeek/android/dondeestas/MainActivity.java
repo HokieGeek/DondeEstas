@@ -126,12 +126,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onResume() {
-        Log.v(TAG, "onResume()");
-        super.onResume();
-    }
-
-    @Override
     protected void onStop() {
         Log.v(TAG, "onStop()");
         if (locationPublisher != null) {
@@ -148,34 +142,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void controlLocationUpdates(boolean enable, MenuItem item) {
-        // String message = "";
-        int icon = -1;
-        if (enable) {
-            // message = "Reporting location";
-            if (locationPublisher != null) {
-                locationPublisher.start();
-            }
-            icon = R.drawable.ic_action_visibility;
-        } else {
-            // message = "Not reporting location";
-            if (locationPublisher != null) {
-                locationPublisher.stop();
-            }
-            icon = R.drawable.ic_action_visibility_off;
-        }
-
-        // item.setChecked(enable);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            item.setIcon(getResources().getDrawable(icon, this.getTheme()));
-        } else {
-            item.setIcon(getResources().getDrawable(icon));
-        }
-
-        // Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -185,13 +151,33 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
             return true;
         } else if (id == R.id.action_visibility) {
-            Log.v(TAG, "Checked?: "+item.isChecked());
             dataModel.setVisible(!dataModel.getVisible());
             controlLocationUpdates(dataModel.getVisible(), item);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void controlLocationUpdates(boolean enable, MenuItem item) {
+        int icon = -1;
+        if (enable) {
+            if (locationPublisher != null) {
+                locationPublisher.start();
+            }
+            icon = R.drawable.ic_action_visibility;
+        } else {
+            if (locationPublisher != null) {
+                locationPublisher.stop();
+            }
+            icon = R.drawable.ic_action_visibility_off;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            item.setIcon(getResources().getDrawable(icon, this.getTheme()));
+        } else {
+            item.setIcon(getResources().getDrawable(icon));
+        }
     }
 
     @Override
