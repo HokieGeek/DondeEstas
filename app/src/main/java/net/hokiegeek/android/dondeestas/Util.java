@@ -30,6 +30,11 @@ public final class Util {
         return new Position(new Date(), l.getLatitude(), l.getLongitude(), l.getAltitude());
     }
 
+
+    public static final LatLng PositionToLatLng(Position p) {
+        return new LatLng(p.latitude, p.longitude);
+    }
+
     public static final JSONObject PositionToJson(Position p) {
         JSONObject j = new JSONObject();
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
@@ -107,10 +112,6 @@ public final class Util {
         } finally {
             return builder.build();
         }
-    }
-
-    public static final LatLng PositionToLatLng(Position p) {
-        return new LatLng(p.latitude, p.longitude);
     }
 
     public static final MarkerOptions PersonToMarkerOption(Person p) {
