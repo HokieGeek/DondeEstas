@@ -21,14 +21,11 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import net.hokiegeek.android.dondeestas.data.Model;
-import net.hokiegeek.android.dondeestas.datasource.DataSource;
 import net.hokiegeek.android.dondeestas.datasource.DataUpdateListener;
 import net.hokiegeek.android.dondeestas.datasource.DbSource;
 import net.hokiegeek.android.dondeestas.dummy.DummyContent;
 
 import com.google.android.gms.location.LocationListener;
-
-import static net.hokiegeek.android.dondeestas.SettingsActivity.*;
 
 public class MainActivity extends AppCompatActivity
         implements
@@ -83,8 +80,8 @@ public class MainActivity extends AppCompatActivity
         locationPublisher.addListener(this);
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String dbServer = sharedPref.getString(KEY_SERVER, "");
-        String userId = sharedPref.getString(KEY_USER_ID, "");
+        String dbServer = sharedPref.getString(SettingsFragment.KEY_SERVER, "");
+        String userId = sharedPref.getString(SettingsFragment.KEY_USER_ID, "");
 
         // TODO: popup settings when have no prefs
         if ("".equals(dbServer) || "".equals(userId)) {
@@ -193,8 +190,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(KEY_SERVER) || key.equals(KEY_USER_ID)) {
-            initializeData(sharedPreferences.getString(KEY_SERVER, ""), sharedPreferences.getString(KEY_USER_ID, ""));
+        if (key.equals(SettingsFragment.KEY_SERVER) || key.equals(SettingsFragment.KEY_USER_ID)) {
+            initializeData(sharedPreferences.getString(SettingsFragment.KEY_SERVER, ""), sharedPreferences.getString(SettingsFragment.KEY_USER_ID, ""));
         }
     }
 
