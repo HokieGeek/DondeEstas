@@ -63,8 +63,6 @@ public class MainActivity extends AppCompatActivity
 
     private LocationPublisher locationPublisher;
 
-    private Boolean isConfigured;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,27 +90,20 @@ public class MainActivity extends AppCompatActivity
 
         // TODO: popup settings when have no prefs
         if ("".equals(dbServer) || "".equals(userId)) {
-            isConfigured = false;
             // Intent intent = new Intent(this, SettingsActivity.class);
             // startActivity(intent);
             dbServer = "http://hokiegeek.net:8585";
             userId = "andres";
-            initializeData(dbServer, userId);
-        } else {
-            isConfigured = true;
-            initializeData(dbServer, userId);
         }
+
+        initializeData(dbServer, userId);
     }
 
     protected void initializeData(String dbServer, String userId) {
         // Setup the data model
-        // TODO: There has got to be a better way...
-        Log.v(TAG, "dbServer = "+dbServer.substring(0,4));
-        if (!"http".equals(dbServer.substring(0,4))) {
-            dbServer = "http://" + dbServer;
-        }
-        DataSource db = new DbSource(dbServer);
-        dataModel = new Model(db, userId);
+        dataModel = new Model(); //new DbSource(dbServer), userId);
+        dataModel.addListener(this);
+        dataModel.initialize(new DbSource(dbServer), userId);
     }
 
     @Override

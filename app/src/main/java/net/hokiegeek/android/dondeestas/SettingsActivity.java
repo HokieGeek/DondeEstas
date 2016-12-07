@@ -25,10 +25,14 @@ public class SettingsActivity extends AppCompatActivity
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        // TODO: Update the summaries of the preferences
-        // if (key.equals(SettingsActivity.KEY_SERVER)) {
-            // Preference pref = findPreference(key);
-            // pref.setSummary(sharedPreferences.getString(key, ""));
-        // }
+        if (SettingsActivity.KEY_SERVER.equals(key)) {
+            String dbServer = sharedPreferences.getString(key, "");
+            if (!dbServer.startsWith("http")) {
+                sharedPreferences.edit().putString(key, "http://" + dbServer).apply();
+            }
+        }
+
+        Preference pref = findPreference(key);
+        pref.setSummary(sharedPreferences.getString(key, ""));
     }
 }
