@@ -23,13 +23,26 @@ public class Model {
     private DataSource dataSource;
     private List<DataUpdateListener> listeners;
 
-    public Model(DataSource dataSource, String userId) {
-        this.whitelisted = new ArrayList<>();
-        this.following = new ArrayList<>();
-        this.listeners = new ArrayList<>();
-        this.dataSource = dataSource;
+    public Model() {
+        synchronized(this) {
+            this.whitelisted = new ArrayList<>();
+            this.following = new ArrayList<>();
+            this.listeners = new ArrayList<>();
+        }
+    }
 
-        new GetUserTask().execute(userId);
+    public Model(DataSource dataSource, String userId) {
+        this();
+
+        initialize(dataSource, userId);
+    }
+
+
+    public void initialize(DataSource source, String userId) {
+        synchronized (dataSource) {
+            dataSource = source;
+            new GetUserTask().execute(userId);
+        }
     }
 
     public void addListener(DataUpdateListener l) {
@@ -97,19 +110,7 @@ public class Model {
 
     private void updateUser(Person p) {
         Log.v(TAG, "Model.updateUser()");
-        // synchronized (user) {
-            // user = p.clone();
-            new PersonUpdateTask().execute(p.clone());
-            /*
-            if (user.getFollowing().size() > 0) {
-                new GetFollowingTask().execute(user.getFollowing());
-            }
-            if (user.getWhitelist().size() > 0) {
-                new GetWhitelistTask().execute(user.getWhitelist());
-            }
-            */
-        // }
-        // fireOnDataUpdate();
+        new PersonUpdateTask().execute(p.clone());
     }
 
     private void setUser(Person p) {

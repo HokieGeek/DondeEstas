@@ -70,8 +70,6 @@ public class MainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
@@ -122,9 +120,10 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        controlLocationUpdates(dataModel.getVisible(), menu.findItem(R.id.action_visibility));
+        if (dataModel != null) {
+            setVisibilityIcon(dataModel.getVisible(), item);
+        }
         return true;
     }
 
@@ -166,20 +165,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentLoaded(Fragment fragment) {
         Log.v(TAG, "onFragmentLoaded()");
-
-        if (fragment instanceof MapFragment) {
-            mapFragment = (MapFragment)fragment;
-
-            dataModel.addListener(this);
-
-            this.updateFragments();
-        }
-    }
-
-    @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
-        Log.v(TAG, "onListFragmentInteraction()");
-        Toast.makeText(this, item.toString(), Toast.LENGTH_SHORT).show();
+        this.updateFragments();
     }
 
     @Override
@@ -191,12 +177,18 @@ public class MainActivity extends AppCompatActivity
 
     private void updateFragments() {
         Log.v(TAG, "updateFragments()");
-        if (mapFragment != null) {
+        if (mapFragment != null && dataModel != null) {
             mapFragment.updateMarkers(Util.PersonListToMarkerOptionList(dataModel.getFollowing()));
             mapFragment.zoomToMarkers();
         }
 
         // TODO: peopleFragment
+    }
+
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+        Log.v(TAG, "onListFragmentInteraction()");
+        Toast.makeText(this, item.toString(), Toast.LENGTH_SHORT).show(); // TODO
     }
 
     @Override
@@ -208,10 +200,10 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.v(TAG, "Location: "+location.toString());
-        // Toast.makeText(this, Util.LocationToPosition(location).toString(), Toast.LENGTH_SHORT).show();
-
-        dataModel.setPosition(Util.LocationToPosition(location));
+        Log.v(TAG, "Location changed: "+location.toString());
+        if (dataModel != null) {
+            dataModel.setPosition(Util.LocationToPosition(location));
+        }
     }
 
     /**
@@ -220,33 +212,25 @@ public class MainActivity extends AppCompatActivity
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
+        public SectionsPagerAdapter(FragmentManager fm) { super(fm); }
 
         @Override
         public Fragment getItem(int position) {
             switch (position) {
-                case 0:
-                    return MapFragment.newInstance();
-                case 1:
-                    return (followingFragment = PersonFragment.newInstance(1));
+                case 0: return (mapFragment = MapFragment.newInstance());
+                case 1: return (followingFragment = PersonFragment.newInstance(1));
             }
             return null;
         }
 
         @Override
-        public int getCount() {
-            return 2;
-        }
+        public int getCount() { return 2; }
 
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
-                case 0:
-                    return getString(R.string.tab_name_map);
-                case 1:
-                    return getString(R.string.tab_name_following);
+                case 0: return getString(R.string.tab_name_map);
+                case 1: return getString(R.string.tab_name_following);
             }
             return null;
         }
