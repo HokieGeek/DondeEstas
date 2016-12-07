@@ -11,7 +11,6 @@ public class SettingsActivity extends AppCompatActivity
 
     public static final String KEY_SERVER = "pref_server";
     public static final String KEY_USER_ID = "pref_userid";
-    public static final String KEY_USER_NAME = "pref_name";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +31,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         }
 
-        Preference pref = findPreference(key);
-        pref.setSummary(sharedPreferences.getString(key, ""));
+        // Preference pref = sharedfindPreference(key);
+        // pref.setSummary(sharedPreferences.getString(key, ""));
     }
 }

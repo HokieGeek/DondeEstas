@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         if (dataModel != null) {
-            setVisibilityIcon(dataModel.getVisible(), item);
+            setVisibilityIcon(dataModel.getVisible(), menu.findItem(R.id.action_visibility));
         }
         return true;
     }

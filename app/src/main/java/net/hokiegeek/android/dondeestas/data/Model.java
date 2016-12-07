@@ -39,10 +39,8 @@ public class Model {
 
 
     public void initialize(DataSource source, String userId) {
-        synchronized (dataSource) {
-            dataSource = source;
-            new GetUserTask().execute(userId);
-        }
+        dataSource = source;
+        new GetUserTask().execute(userId);
     }
 
     public void addListener(DataUpdateListener l) {

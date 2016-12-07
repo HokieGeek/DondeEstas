@@ -45,6 +45,8 @@ public class LocationPublisher
     public LocationPublisher(AppCompatActivity parent) {
         context = parent;
 
+        listeners = new ArrayList<>();
+
         locationRequest = new LocationRequest();
         locationRequest.setInterval(10000);
         locationRequest.setFastestInterval(5000);
@@ -63,7 +65,7 @@ public class LocationPublisher
         }
     }
 
-    public void removeListener(LocationListener l) {
+    public boolean removeListener(LocationListener l) {
         synchronized (listeners) {
             if (listeners.contains(l)) {
                 listeners.remove(l);
@@ -71,6 +73,12 @@ public class LocationPublisher
             }
         }
         return false;
+    }
+
+    private void fireOnLocationChanged(Location loc) {
+        for (LocationListener l : listeners) {
+            l.onLocationChanged(loc);
+        }
     }
 
     public void enable(boolean enable) {
@@ -155,6 +163,6 @@ public class LocationPublisher
 
     @Override
     public void onLocationChanged(Location location) {
-        listener.onLocationChanged(location);
+        fireOnLocationChanged(location);
     }
 }
