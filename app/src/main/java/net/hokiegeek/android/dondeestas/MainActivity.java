@@ -83,6 +83,9 @@ public class MainActivity extends AppCompatActivity
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
+        locationPublisher = new LocationPublisher(this);
+        locationPublisher.addListener(this);
+
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String dbServer = sharedPref.getString(KEY_SERVER, "");
         String userId = sharedPref.getString(KEY_USER_ID, "");
@@ -102,10 +105,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     protected void initializeData(String dbServer, String userId) {
-        if (locationPublisher == null) {
-            locationPublisher = new LocationPublisher(this);
-        }
-
         // Setup the data model
         // TODO: There has got to be a better way...
         Log.v(TAG, "dbServer = "+dbServer.substring(0,4));
@@ -118,19 +117,15 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onStart() {
-        Log.v(TAG, "onStart()");
-        if (locationPublisher != null) {
-            locationPublisher.start();
+        if (dataModel != null) {
+            locationPublisher.enable(dataModel.getVisible());
         }
         super.onStart();
     }
 
     @Override
     protected void onStop() {
-        Log.v(TAG, "onStop()");
-        if (locationPublisher != null) {
-            locationPublisher.stop();
-        }
+        locationPublisher.enable(false);
         super.onStop();
     }
 
@@ -151,25 +146,22 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
             return true;
         } else if (id == R.id.action_visibility) {
-            dataModel.setVisible(!dataModel.getVisible());
-            controlLocationUpdates(dataModel.getVisible(), item);
+            if (dataModel != null) {
+                dataModel.setVisible(!dataModel.getVisible());
+                locationPublisher.enable(dataModel.getVisible());
+                setVisibilityIcon(dataModel.getVisible(), item);
+            }
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void controlLocationUpdates(boolean enable, MenuItem item) {
+    private void setVisibilityIcon(boolean enable, MenuItem item) {
         int icon = -1;
         if (enable) {
-            if (locationPublisher != null) {
-                locationPublisher.start();
-            }
             icon = R.drawable.ic_action_visibility;
         } else {
-            if (locationPublisher != null) {
-                locationPublisher.stop();
-            }
             icon = R.drawable.ic_action_visibility_off;
         }
 

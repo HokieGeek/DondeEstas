@@ -19,6 +19,9 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by andres on 11/29/16.
  */
@@ -37,11 +40,10 @@ public class LocationPublisher
 
     private Context context;
 
-    private LocationListener listener;
+    private List<LocationListener> listeners;
 
     public LocationPublisher(AppCompatActivity parent) {
         context = parent;
-        listener = (LocationListener)parent;
 
         locationRequest = new LocationRequest();
         locationRequest.setInterval(10000);
@@ -55,14 +57,29 @@ public class LocationPublisher
                 .build();
     }
 
-    public void start() {
-        Log.v(TAG, "start()");
-        googleApiClient.connect();
+    public void addListener(LocationListener l) {
+        synchronized (listeners) {
+            listeners.add(l);
+        }
     }
 
-    public void stop() {
-        Log.v(TAG, "stop()");
-        googleApiClient.disconnect();
+    public void removeListener(LocationListener l) {
+        synchronized (listeners) {
+            if (listeners.contains(l)) {
+                listeners.remove(l);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void enable(boolean enable) {
+        Log.v(TAG, "LocationPublisher.enable()");
+        if (enable) {
+            googleApiClient.connect();
+        } else {
+            googleApiClient.disconnect();
+        }
     }
 
     @Override
@@ -140,5 +157,4 @@ public class LocationPublisher
     public void onLocationChanged(Location location) {
         listener.onLocationChanged(location);
     }
-
 }
