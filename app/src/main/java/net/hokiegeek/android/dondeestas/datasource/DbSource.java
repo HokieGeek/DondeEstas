@@ -77,7 +77,7 @@ public class DbSource implements DataSource {
         List<Person> p = new ArrayList<>();
         try {
             if (j != null) {
-                JSONArray a = j.getJSONArray("People");
+                JSONArray a = j.getJSONArray("people");
                 for (int i = 0; i < a.length(); i++) {
                     p.add(Util.PersonFromJson(a.getJSONObject(i)));
                 }

@@ -40,7 +40,7 @@ public class Person {
 
     @Override
     public String toString() {
-        return "TODO"; // TODO: implement toString()
+        return params.id; // TODO: implement toString()
     }
 
     @Override

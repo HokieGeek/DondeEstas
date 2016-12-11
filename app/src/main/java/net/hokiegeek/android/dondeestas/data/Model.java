@@ -123,7 +123,6 @@ public class Model {
         }
 
         synchronized (user) {
-            // TODO: new PersonUpdateTask().execute(user);
             if (user.getFollowing().size() > 0) {
                 new GetFollowingTask().execute(user.getFollowing());
             }
@@ -267,6 +266,8 @@ public class Model {
             synchronized (following) {
                 following = persons;
             }
+            // TODO: periodically re-execute self
+            // new GetFollowingTask().execute(user.getFollowing());
             super.onPostExecute(persons);
         }
     }

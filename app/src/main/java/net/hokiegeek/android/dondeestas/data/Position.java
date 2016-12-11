@@ -6,7 +6,7 @@ import java.util.Date;
  * Created by andres on 11/23/16.
  */
 
-public class Position {
+public class Position implements Cloneable {
     public final Double latitude;
     public final Double longitude;
     public final Double elevation;
@@ -23,13 +23,17 @@ public class Position {
         this.elevation = elevation;
     }
 
+    @Override
     public Position clone() {
+        Position p;
         try {
-            super.clone();
+            p = (Position)super.clone();
+            return p;
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
+            throw new RuntimeException();
         }
-        return new Position(this.tov, this.latitude, this.longitude, this.elevation);
+        // return new Position((Date)this.tov.clone(), this.latitude, this.longitude, this.elevation);
     }
 
     @Override

@@ -21,9 +21,9 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import net.hokiegeek.android.dondeestas.data.Model;
+import net.hokiegeek.android.dondeestas.data.Person;
 import net.hokiegeek.android.dondeestas.datasource.DataUpdateListener;
 import net.hokiegeek.android.dondeestas.datasource.DbSource;
-import net.hokiegeek.android.dondeestas.dummy.DummyContent;
 
 import com.google.android.gms.location.LocationListener;
 
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setVisibilityIcon(boolean enable, MenuItem item) {
-        int icon = -1;
+        int icon;
         if (enable) {
             icon = R.drawable.ic_action_visibility;
         } else {
@@ -180,10 +180,13 @@ public class MainActivity extends AppCompatActivity
         }
 
         // TODO: peopleFragment
+        if (followingFragment != null && dataModel != null) {
+            followingFragment.updateItems(dataModel.getFollowing());
+        }
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+    public void onListFragmentInteraction(Person item) {
         Log.v(TAG, "onListFragmentInteraction()");
         Toast.makeText(this, item.toString(), Toast.LENGTH_SHORT).show(); // TODO
     }
@@ -215,7 +218,7 @@ public class MainActivity extends AppCompatActivity
         public Fragment getItem(int position) {
             switch (position) {
                 case 0: return (mapFragment = MapFragment.newInstance());
-                case 1: return (followingFragment = PersonFragment.newInstance(1));
+                case 1: return (followingFragment = PersonFragment.newInstance());
             }
             return null;
         }
