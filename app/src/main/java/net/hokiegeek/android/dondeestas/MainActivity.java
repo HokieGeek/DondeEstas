@@ -87,14 +87,13 @@ public class MainActivity extends AppCompatActivity
         if ("".equals(dbServer) || "".equals(userId)) {
             // Intent intent = new Intent(this, SettingsActivity.class);
             // startActivity(intent);
+            Log.v(TAG, "Faking out the prefs");
             dbServer = "http://hokiegeek.net:8585";
             userId = "andres";
-            sharedPref.edit().putString(SettingsFragment.KEY_SERVER, dbServer);
-            sharedPref.edit().putString(SettingsFragment.KEY_USER_ID, userId);
-            // TODO: does this trigger the change listener?
-        } else {
-            initializeData(dbServer, userId);
+            sharedPref.edit().putString(SettingsFragment.KEY_SERVER, dbServer).apply();
+            sharedPref.edit().putString(SettingsFragment.KEY_USER_ID, userId).apply();
         }
+        initializeData(dbServer, userId);
     }
 
     protected void initializeData(String dbServer, String userId) {
