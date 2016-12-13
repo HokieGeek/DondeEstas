@@ -69,6 +69,7 @@ public class MapFragment extends Fragment
      */
     // TODO: Rename and change types and number of parameters
     public static MapFragment newInstance() {
+        Log.v(TAG, "MapFragment.newInstance()");
         MapFragment fragment = new MapFragment();
         return fragment;
     }

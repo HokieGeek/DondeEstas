@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onStart() {
+        Log.v(TAG, "Activity.onStart()");
         if (dataModel != null) {
             locationPublisher.enable(dataModel.getVisible());
         }
@@ -113,6 +114,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onStop() {
+        Log.v(TAG, "Activity.onStop()");
         locationPublisher.enable(false);
         super.onStop();
     }
@@ -128,6 +130,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.v(TAG, "Activity.onOptionsItemSelected()");
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
@@ -177,13 +180,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onDataUpdate() {
-        Log.v(TAG, "onDataUpdate()");
+        Log.v(TAG, "Activity.onDataUpdate()");
         invalidateOptionsMenu();
         this.updateFragments();
     }
 
     private void updateFragments() {
-        Log.v(TAG, "updateFragments()");
+        Log.v(TAG, "Activity.updateFragments()");
         if (mapFragment != null && dataModel != null) {
             mapFragment.updateMarkers(Util.PersonListToMarkerOptionList(dataModel.getFollowing()));
             mapFragment.zoomToMarkers();
@@ -196,12 +199,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(Person item) {
-        Log.v(TAG, "onListFragmentInteraction()");
+        Log.v(TAG, "Activity.onListFragmentInteraction()");
         Toast.makeText(this, item.toString(), Toast.LENGTH_SHORT).show(); // TODO
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        Log.v(TAG, "Activity.onSharedPreferencesChanged()");
         if (key.equals(SettingsFragment.KEY_SERVER) || key.equals(SettingsFragment.KEY_USER_ID)) {
             initializeData(sharedPreferences.getString(SettingsFragment.KEY_SERVER, ""), sharedPreferences.getString(SettingsFragment.KEY_USER_ID, ""));
         }
