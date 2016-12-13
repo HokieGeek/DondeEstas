@@ -8,6 +8,10 @@ import net.hokiegeek.android.dondeestas.datasource.DataUpdateListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by andres on 11/23/16.
@@ -23,12 +27,22 @@ public class Model {
     private DataSource dataSource;
     private List<DataUpdateListener> listeners;
 
+    private ScheduledExecutorService scheduleTaskExecutor;
+
     public Model() {
         synchronized(this) {
             this.whitelisted = new ArrayList<>();
             this.following = new ArrayList<>();
             this.listeners = new ArrayList<>();
+            this.scheduleTaskExecutor = Executors.newScheduledThreadPool(5);
+            // This schedule a task to run every 10 seconds:
         }
+
+        scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
+            public void run() {
+                new GetFollowingTask().execute(user.getFollowing());
+            }
+        }, 0, 10, TimeUnit.SECONDS); // TODO: make this configurable
     }
 
     public Model(DataSource dataSource, String userId) {
@@ -240,6 +254,7 @@ public class Model {
     private class GetPeopleTask extends AsyncTask<List<String>, Void, List<Person>> {
         @Override
         protected List<Person> doInBackground(List<String>... params) {
+            Log.v(TAG, "GetPeopleTask.doInBackground()");
             return dataSource.getPeopleByIdList(params[0]);
         }
 
@@ -266,8 +281,6 @@ public class Model {
             synchronized (following) {
                 following = persons;
             }
-            // TODO: periodically re-execute self
-            // new GetFollowingTask().execute(user.getFollowing());
             super.onPostExecute(persons);
         }
     }
