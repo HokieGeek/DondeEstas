@@ -163,7 +163,15 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onFragmentLoaded(Fragment fragment) {
-        Log.v(TAG, "onFragmentLoaded()");
+        Log.v(TAG, "Activity.onFragmentLoaded()");
+
+        if (fragment instanceof MapFragment) {
+            mapFragment = (MapFragment) fragment;
+        }
+        if (fragment instanceof PersonFragment) {
+            followingFragment = (PersonFragment) fragment;
+        }
+
         this.updateFragments();
     }
 
@@ -181,7 +189,6 @@ public class MainActivity extends AppCompatActivity
             mapFragment.zoomToMarkers();
         }
 
-        // TODO: peopleFragment
         if (followingFragment != null && dataModel != null) {
             followingFragment.updateItems(dataModel.getFollowing());
         }
