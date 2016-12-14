@@ -35,8 +35,8 @@ public class PersonFragment extends Fragment {
     public PersonFragment() {
     }
 
-    @SuppressWarnings("unused")
     public static PersonFragment newInstance() {
+        Log.v(TAG, "PersonFragment.newInstance()");
         return new PersonFragment();
     }
 
@@ -57,7 +57,6 @@ public class PersonFragment extends Fragment {
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
             adapter = new PersonRecyclerViewAdapter(mListener);
             recyclerView.setAdapter(adapter);
-            // recyclerView.setAdapter(new PersonRecyclerViewAdapter(this.items, mListener));
         }
         return view;
     }

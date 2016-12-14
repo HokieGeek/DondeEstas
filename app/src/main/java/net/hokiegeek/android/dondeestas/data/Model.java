@@ -40,6 +40,7 @@ public class Model {
 
         scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
             public void run() {
+                Log.v(TAG, "Executor retrieving Following");
                 new GetFollowingTask().execute(user.getFollowing());
             }
         }, 0, 10, TimeUnit.SECONDS); // TODO: make this configurable
