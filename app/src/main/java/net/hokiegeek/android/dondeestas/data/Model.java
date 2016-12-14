@@ -278,6 +278,7 @@ public class Model {
     private class GetFollowingTask extends GetPeopleTask {
         @Override
         protected void onPostExecute(List<Person> persons) {
+            Log.v(TAG, "GetFollowingTask.onPostExecute()");
             synchronized (following) {
                 following = persons;
             }

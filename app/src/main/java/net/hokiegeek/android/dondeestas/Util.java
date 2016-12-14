@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by andres on 11/24/16.
@@ -52,8 +53,9 @@ public final class Util {
 
     public static final Position PositionFromJson(JSONObject j) {
         Position p = null;
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.ENGLISH);
         try {
-            p = new Position(new Date(), // TODO: Parse the date correctly
+            p = new Position(fmt.parse(j.getString("tov")),
                     j.getDouble("latitude"),
                     j.getDouble("longitude"),
                     j.getDouble("elevation"));
@@ -115,8 +117,11 @@ public final class Util {
     }
 
     public static final MarkerOptions PersonToMarkerOption(Person p) {
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
         return new MarkerOptions().position(PositionToLatLng(p.getPosition()))
-                    .title(p.getName());
+                    .title(p.getName())
+                    .snippet(fmt.format(p.getPosition().tov))
+                    ;
     }
 
     public static final List<MarkerOptions> PersonListToMarkerOptionList(List<Person> people) {
