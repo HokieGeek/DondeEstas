@@ -82,7 +82,7 @@ public class LocationPublisher
     }
 
     public void enable(boolean enable) {
-        Log.v(TAG, "LocationPublisher.enable()");
+        Log.v(TAG, "LocationPublisher.enable("+enable+")");
         if (enable) {
             googleApiClient.connect();
         } else {

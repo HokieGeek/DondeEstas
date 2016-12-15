@@ -54,6 +54,7 @@ public class Model {
 
 
     public void initialize(DataSource source, String userId) {
+        Log.v(TAG, "Model.initialize()");
         dataSource = source;
         new GetUserTask().execute(userId);
     }
