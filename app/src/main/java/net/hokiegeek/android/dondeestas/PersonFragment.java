@@ -132,6 +132,6 @@ public class PersonFragment extends Fragment {
     }
 
     public interface OnAddFollowingListener {
-        void onFollowPerson(String id);
+        void onFollowPeople(List<String> ids);
     }
 }

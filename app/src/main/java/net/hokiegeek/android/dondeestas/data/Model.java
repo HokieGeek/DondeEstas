@@ -35,22 +35,20 @@ public class Model {
             this.following = new ArrayList<>();
             this.listeners = new ArrayList<>();
             this.scheduleTaskExecutor = Executors.newScheduledThreadPool(5);
-            // This schedule a task to run every 10 seconds:
         }
     }
 
     public Model(DataSource dataSource, String userId) {
         this();
-
         initialize(dataSource, userId);
     }
-
 
     public void initialize(DataSource source, String userId) {
         Log.v(TAG, "Model.initialize()");
         dataSource = source;
         new GetUserTask().execute(userId);
 
+        // This schedule a task to run every 10 seconds:
         scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
             public void run() {
                 Log.i(TAG, "Executor retrieving Following");
@@ -121,6 +119,13 @@ public class Model {
         if (user == null) return new ArrayList<>();
         synchronized (following) {
             return following;
+        }
+    }
+
+    public List<String> getFollowingIds() {
+        if (user == null) return new ArrayList<>();
+        synchronized (user) {
+            return user.getFollowing();
         }
     }
 

@@ -27,6 +27,9 @@ import net.hokiegeek.android.dondeestas.datasource.DbSource;
 
 import com.google.android.gms.location.LocationListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity
         implements
         OnFragmentLoadedListener,
@@ -206,10 +209,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFollowPerson(String id) {
+    public void onFollowPeople(List<String> ids) {
         Log.v(TAG, "Adding a person to follow");
         if (dataModel != null) {
-            dataModel.addFollowing(id);
+            List<String> toFollow = new ArrayList<>();
+            toFollow.addAll(dataModel.getFollowingIds());
+            toFollow.addAll(ids);
+            dataModel.setFollowing(toFollow);
         }
     }
 
