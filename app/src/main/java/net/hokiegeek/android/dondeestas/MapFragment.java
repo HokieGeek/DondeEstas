@@ -253,8 +253,4 @@ public class MapFragment extends Fragment
             map.animateCamera(cu);
         }
     }
-
-    public interface OnFragmentLoadedListener {
-        void onFragmentLoaded(Fragment fragment);
-    }
 }

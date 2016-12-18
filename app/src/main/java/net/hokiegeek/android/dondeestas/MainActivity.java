@@ -29,7 +29,7 @@ import com.google.android.gms.location.LocationListener;
 
 public class MainActivity extends AppCompatActivity
         implements
-        MapFragment.OnFragmentLoadedListener,
+        OnFragmentLoadedListener,
         PersonFragment.OnListFragmentInteractionListener,
         PersonFragment.OnAddFollowingListener,
         DataUpdateListener,
@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity
         Log.v(TAG, "Activity.onStart()");
         if (dataModel != null) {
             locationPublisher.enable(dataModel.getVisible());
+            this.updateFragments();
         }
         super.onStart();
     }
@@ -239,8 +240,8 @@ public class MainActivity extends AppCompatActivity
         @Override
         public Fragment getItem(int position) {
             switch (position) {
-                case 0: return (mapFragment = MapFragment.newInstance());
-                case 1: return (followingFragment = PersonFragment.newInstance());
+                case 0: return MapFragment.newInstance();
+                case 1: return PersonFragment.newInstance();
             }
             return null;
         }

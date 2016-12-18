@@ -31,6 +31,8 @@ public class PersonFragment extends Fragment {
 
     private OnAddFollowingListener addFollowingListener;
 
+    private OnFragmentLoadedListener fragmentLoadedListener;
+
     private PersonRecyclerViewAdapter adapter;
 
     /**
@@ -56,9 +58,10 @@ public class PersonFragment extends Fragment {
         Log.v(TAG, "PersonFragment.onCreateView()");
         View view = inflater.inflate(R.layout.fragment_person_list, container, false);
 
+        final Context context = view.getContext();
+
         // Set the adapter
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.followingList);
-        final Context context = view.getContext();
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         adapter = new PersonRecyclerViewAdapter(listListener);
         recyclerView.setAdapter(adapter);
@@ -70,6 +73,8 @@ public class PersonFragment extends Fragment {
                 Toast.makeText(context, "TODO", Toast.LENGTH_SHORT).show(); // TODO
             }
         });
+
+        fragmentLoadedListener.onFragmentLoaded(this);
 
         return view;
     }
@@ -91,6 +96,13 @@ public class PersonFragment extends Fragment {
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnAddFollowingListener");
+        }
+
+        if (context instanceof OnFragmentLoadedListener) {
+            fragmentLoadedListener = (OnFragmentLoadedListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentLoadedListener");
         }
     }
 

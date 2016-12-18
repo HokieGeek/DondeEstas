@@ -37,13 +37,6 @@ public class Model {
             this.scheduleTaskExecutor = Executors.newScheduledThreadPool(5);
             // This schedule a task to run every 10 seconds:
         }
-
-        scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
-            public void run() {
-                Log.v(TAG, "Executor retrieving Following");
-                new GetFollowingTask().execute(user.getFollowing());
-            }
-        }, 0, 10, TimeUnit.SECONDS); // TODO: make this configurable
     }
 
     public Model(DataSource dataSource, String userId) {
@@ -57,6 +50,15 @@ public class Model {
         Log.v(TAG, "Model.initialize()");
         dataSource = source;
         new GetUserTask().execute(userId);
+
+        scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
+            public void run() {
+                Log.i(TAG, "Executor retrieving Following");
+                synchronized (user) {
+                    new GetFollowingTask().execute(user.getFollowing());
+                }
+            }
+        }, 15, 10, TimeUnit.SECONDS); // TODO: make this configurable
     }
 
     public void addListener(DataUpdateListener l) {
