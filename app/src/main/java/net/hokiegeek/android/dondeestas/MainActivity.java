@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity
         implements
         MapFragment.OnFragmentLoadedListener,
         PersonFragment.OnListFragmentInteractionListener,
+        PersonFragment.OnAddFollowingListener,
         DataUpdateListener,
         SharedPreferences.OnSharedPreferenceChangeListener,
         LocationListener
@@ -201,6 +202,14 @@ public class MainActivity extends AppCompatActivity
     public void onListFragmentInteraction(Person item) {
         Log.v(TAG, "Activity.onListFragmentInteraction()");
         Toast.makeText(this, item.toString(), Toast.LENGTH_SHORT).show(); // TODO
+    }
+
+    @Override
+    public void onFollowPerson(String id) {
+        Log.v(TAG, "Adding a person to follow");
+        if (dataModel != null) {
+            dataModel.addFollowing(id);
+        }
     }
 
     @Override

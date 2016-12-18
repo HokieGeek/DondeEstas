@@ -2,6 +2,7 @@ package net.hokiegeek.android.dondeestas;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import net.hokiegeek.android.dondeestas.data.Person;
 
@@ -18,13 +20,16 @@ import java.util.List;
  * A fragment representing a list of Items.
  * <p/>
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
+ * and {@link OnAddFollowingListener}
  * interface.
  */
 public class PersonFragment extends Fragment {
 
     private static final String TAG = "DONDE";
 
-    private OnListFragmentInteractionListener mListener;
+    private OnListFragmentInteractionListener listListener;
+
+    private OnAddFollowingListener addFollowingListener;
 
     private PersonRecyclerViewAdapter adapter;
 
@@ -48,39 +53,60 @@ public class PersonFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.v(TAG, "PersonFragment.onCreateView()");
         View view = inflater.inflate(R.layout.fragment_person_list, container, false);
 
         // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            adapter = new PersonRecyclerViewAdapter(mListener);
-            recyclerView.setAdapter(adapter);
-        }
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.followingList);
+        final Context context = view.getContext();
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        adapter = new PersonRecyclerViewAdapter(listListener);
+        recyclerView.setAdapter(adapter);
+
+        // Set the add button
+        FloatingActionButton myFab = (FloatingActionButton) view.findViewById(R.id.fabAddFollowing);
+        myFab.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Toast.makeText(context, "TODO", Toast.LENGTH_SHORT).show(); // TODO
+            }
+        });
+
         return view;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        Log.v(TAG, "PersonFragment.onAttach()");
+
         if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+            listListener = (OnListFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
+        }
+
+        if (context instanceof OnAddFollowingListener) {
+            addFollowingListener = (OnAddFollowingListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnAddFollowingListener");
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        Log.v(TAG, "PersonFragment.onDetach()");
+        listListener = null;
+        addFollowingListener = null;
     }
 
     public void updateItems(List<Person> items) {
         Log.v(TAG, "PersonFragment.updateItems()");
-        adapter.updateItems(items);
+        if (adapter != null) {
+            adapter.updateItems(items);
+        }
     }
 
     /**
@@ -91,5 +117,9 @@ public class PersonFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         void onListFragmentInteraction(Person item);
+    }
+
+    public interface OnAddFollowingListener {
+        void onFollowPerson(String id);
     }
 }

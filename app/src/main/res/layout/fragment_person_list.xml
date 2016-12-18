@@ -1,13 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:name="net.hokiegeek.android.dondeestas.PersonFragment"
+    tools:context="net.hokiegeek.android.dondeestas.PersonFragment"
+    >
 <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/list"
-    android:name="net.hokiegeek.android.dondeestas.PersonFragment"
+    android:id="@+id/followingList"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="net.hokiegeek.android.dondeestas.PersonFragment"
     tools:listitem="@layout/fragment_person" />
+
+<android.support.design.widget.FloatingActionButton
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:clickable="true"
+    app:fabSize="normal"
+    app:srcCompat="@drawable/ic_person_add"
+    android:id="@+id/fabAddFollowing"
+    app:backgroundTint="@color/colorAccent"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentEnd="true"
+    android:hapticFeedbackEnabled="true" />
+</RelativeLayout>
+
