@@ -1,5 +1,6 @@
 package net.hokiegeek.android.dondeestas;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.preference.Preference;
@@ -20,7 +21,14 @@ public class SettingsFragment extends PreferenceFragment {
 
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences);
+        addOnPreferenceChangeListeners();
 
+        SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+        setSummaryIfNoValue(prefs, KEY_SERVER);
+        setSummaryIfNoValue(prefs, KEY_USER_ID);
+    }
+
+    private void addOnPreferenceChangeListeners() {
         findPreference(KEY_SERVER).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -41,5 +49,12 @@ public class SettingsFragment extends PreferenceFragment {
                 return false;
             }
         });
+    }
+
+    private void setSummaryIfNoValue(SharedPreferences prefs, String key) {
+        String val = prefs.getString(key, "");
+        if (!"".equals(val)) {
+            findPreference(key).setSummary(val);
+        }
     }
 }
