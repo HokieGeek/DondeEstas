@@ -48,6 +48,8 @@ public class MapFragment extends Fragment
 
     private List<Marker> markers;
 
+    private FloatingActionButton fabGather;
+
     /**
      * Request code for location permission request.
      *
@@ -67,7 +69,6 @@ public class MapFragment extends Fragment
      *
      * @return A new instance of fragment MapFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static MapFragment newInstance() {
         Log.v(TAG, "MapFragment.newInstance()");
         MapFragment fragment = new MapFragment();
@@ -92,8 +93,8 @@ public class MapFragment extends Fragment
         // Gets to GoogleMap from the MapView and does initialization stuff
         mapView.getMapAsync(this);
 
-        FloatingActionButton myFab = (FloatingActionButton) v.findViewById(R.id.fabFitMarkers);
-        myFab.setOnClickListener(new View.OnClickListener() {
+        fabGather = (FloatingActionButton) v.findViewById(R.id.fabFitMarkers);
+        fabGather.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 zoomToMarkers();
             }
@@ -231,6 +232,12 @@ public class MapFragment extends Fragment
             for (MarkerOptions mark : markerOptions) {
                 markers.add(map.addMarker(mark));
             }
+        }
+
+        if (markerOptions.isEmpty()) {
+            fabGather.setVisibility(View.INVISIBLE);
+        } else {
+            fabGather.setVisibility(View.VISIBLE);
         }
     }
 
