@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity
         Log.v(TAG, "Activity.updateFragments()");
         if (mapFragment != null && dataModel != null) {
             mapFragment.updateMarkers(Util.PersonListToMarkerOptionList(dataModel.getFollowing()));
-            mapFragment.zoomToMarkers();
+            // mapFragment.zoomToMarkers();
         }
 
         if (followingFragment != null && dataModel != null) {
