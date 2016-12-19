@@ -45,6 +45,7 @@ public class SettingsFragment extends PreferenceFragment {
         findPreference(KEY_USER_ID).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
+                getPreferenceManager().getSharedPreferences().edit().putString(KEY_USER_ID, (String)newValue).apply();
                 preference.setSummary((String)newValue);
                 return false;
             }

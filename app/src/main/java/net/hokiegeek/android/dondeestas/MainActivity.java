@@ -84,20 +84,16 @@ public class MainActivity extends AppCompatActivity
         locationPublisher.addListener(this);
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPref.registerOnSharedPreferenceChangeListener(this);
         String dbServer = sharedPref.getString(SettingsFragment.KEY_SERVER, "");
         String userId = sharedPref.getString(SettingsFragment.KEY_USER_ID, "");
 
-        // TODO: popup settings when have no prefs
         if ("".equals(dbServer) || "".equals(userId)) {
-            // Intent intent = new Intent(this, SettingsActivity.class);
-            // startActivity(intent);
-            Log.v(TAG, "Faking out the prefs");
-            dbServer = "http://hokiegeek.net:8585";
-            userId = "andres";
-            sharedPref.edit().putString(SettingsFragment.KEY_SERVER, dbServer).apply();
-            sharedPref.edit().putString(SettingsFragment.KEY_USER_ID, userId).apply();
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+        } else {
+            initializeData(dbServer, userId);
         }
-        initializeData(dbServer, userId);
     }
 
     protected void initializeData(String dbServer, String userId) {
@@ -222,7 +218,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.v(TAG, "Activity.onSharedPreferencesChanged()");
-        if (key.equals(SettingsFragment.KEY_SERVER) || key.equals(SettingsFragment.KEY_USER_ID)) {
+        if (SettingsFragment.KEY_SERVER.equals(key) || SettingsFragment.KEY_USER_ID.equals(key)) {
             initializeData(sharedPreferences.getString(SettingsFragment.KEY_SERVER, ""), sharedPreferences.getString(SettingsFragment.KEY_USER_ID, ""));
         }
     }
