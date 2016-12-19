@@ -60,11 +60,23 @@ public class PersonRecyclerViewAdapter extends RecyclerView.Adapter<PersonRecycl
 
     public void updateItems(List<Person> items) {
         Log.v(TAG, "PersonRecyclerViewAdapter.updateItems()");
+
         int oldListSize = this.people.size();
-        this.people.clear();
-        notifyItemRangeRemoved(0, oldListSize);
-        this.people.addAll(items);
-        notifyItemRangeInserted(0, this.people.size());
+        boolean removed = this.people.retainAll(items);
+
+        boolean inserted = false;
+        items.removeAll(this.people);
+        if (!items.isEmpty()) {
+            this.people.addAll(items);
+            inserted = true;
+        }
+
+        if (removed) {
+            notifyItemRangeRemoved(0, oldListSize);
+        }
+        if (inserted) {
+            notifyItemRangeInserted(0, this.people.size());
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
