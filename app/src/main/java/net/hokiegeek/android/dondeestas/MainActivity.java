@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity
 
         locationPublisher = new LocationPublisher(this);
         locationPublisher.addListener(this);
+        // startService(new Intent(this, LocationPublisher.class));
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPref.registerOnSharedPreferenceChangeListener(this);

@@ -1,10 +1,13 @@
 package net.hokiegeek.android.dondeestas;
 
 import android.Manifest;
+import android.app.Service;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -26,11 +29,7 @@ import java.util.List;
  * Created by andres on 11/29/16.
  */
 
-public class LocationPublisher
-    implements
-    GoogleApiClient.ConnectionCallbacks,
-    GoogleApiClient.OnConnectionFailedListener,
-    LocationListener
+public class LocationPublisher // extends Service
 {
     private GoogleApiClient googleApiClient;
 
@@ -40,34 +39,41 @@ public class LocationPublisher
 
     private List<LocationListener> listeners;
 
-    public LocationPublisher(AppCompatActivity parent) {
-        context = parent;
+    private LocationTracker tracker;
 
-        listeners = new ArrayList<>();
+    private Context context;
 
-        locationRequest = new LocationRequest();
-        locationRequest.setInterval(10000);
-        locationRequest.setFastestInterval(5000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    private class LocationTracker
+            implements
+            GoogleApiClient.ConnectionCallbacks,
+            GoogleApiClient.OnConnectionFailedListener,
+            LocationListener
+    {
+        private GoogleApiClient googleApiClient;
 
-        googleApiClient = new GoogleApiClient.Builder(context)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-    }
+        private LocationRequest locationRequest;
 
-    public void addListener(LocationListener l) {
-        synchronized (listeners) {
-            listeners.add(l);
+        LocationTracker() {
+            listeners = new ArrayList<>();
+
+            locationRequest = new LocationRequest();
+            locationRequest.setInterval(10000);
+            locationRequest.setFastestInterval(5000);
+            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+            googleApiClient = new GoogleApiClient.Builder(context)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
         }
-    }
 
-    public boolean removeListener(LocationListener l) {
-        synchronized (listeners) {
-            if (listeners.contains(l)) {
-                listeners.remove(l);
-                return true;
+        void enable(boolean enable) {
+            Log.v(TAG, "LocationTracker.enable("+enable+")");
+            if (enable) {
+                googleApiClient.connect();
+            } else {
+                googleApiClient.disconnect();
             }
         }
         return false;
@@ -136,13 +142,12 @@ public class LocationPublisher
     }
 
     protected void startLocationUpdates() {
-        Log.v(Util.TAG, "Starting location updates");
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             Log.v(Util.TAG, "Starting location updates: have permissions");
             LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
         } else {
-            Log.v(Util.TAG, "Starting location updates: do not have permissions");
+            Log.e(Util.TAG, "Starting location updates: do not have permissions");
             Toast.makeText(context, "Do not have permissions", Toast.LENGTH_SHORT).show();
         }
     }
@@ -150,17 +155,75 @@ public class LocationPublisher
     @Override
     public void onConnectionSuspended(int i) {
         // TODO: implement onConnectionSuspended?
+            Log.v(Util.TAG, "onConnectionSuspended()");
+        }
+
+        @Override
+        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+            // TODO: implement onConnectionFailed?
+            Log.v(Util.TAG, "onConnectionFailed()");
+        }
+
+        @Override
+        public void onLocationChanged(Location location) {
+            fireOnLocationChanged(location);
+        }
+    }
+
+    public LocationPublisher() {
+        listeners = new ArrayList<>();
+    }
+
+    public LocationPublisher(AppCompatActivity parent) {
+        this();
+        context = parent;
+        tracker = new LocationTracker();
+    }
+
+    public void addListener(LocationListener l) {
+        synchronized (listeners) {
+            listeners.add(l);
+        }
+    }
+
+    public boolean removeListener(LocationListener l) {
+        synchronized (listeners) {
+            if (listeners.contains(l)) {
+                listeners.remove(l);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void fireOnLocationChanged(Location loc) {
+        for (LocationListener l : listeners) {
+            l.onLocationChanged(loc);
         Log.v(Util.TAG, "onConnectionSuspended()");
     }
 
+    public void enable(boolean enable) {
+        if (tracker != null) {
+            tracker.enable(enable);
+        }
+    }
+
+    /*
+    @Nullable
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        // TODO: implement onConnectionFailed?
-        Log.v(Util.TAG, "onConnectionFailed()");
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 
     @Override
-    public void onLocationChanged(Location location) {
-        fireOnLocationChanged(location);
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        context = getApplicationContext();
+        this.addListener(context);
+
+        tracker = new LocationTracker();
+
+        super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
     }
+    */
 }
