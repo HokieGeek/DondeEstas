@@ -177,6 +177,10 @@ public class MainActivity extends AppCompatActivity
         }
 
         this.updateFragments();
+
+        if (dataModel.getFollowing().size() == 1) {
+            mapFragment.zoomToMarkers();
+        }
     }
 
     @Override
@@ -190,7 +194,6 @@ public class MainActivity extends AppCompatActivity
         Log.v(TAG, "Activity.updateFragments()");
         if (mapFragment != null && dataModel != null) {
             mapFragment.updateMarkers(Util.PersonListToMarkerOptionList(dataModel.getFollowing()));
-            // mapFragment.zoomToMarkers();
         }
 
         if (followingFragment != null && dataModel != null) {
