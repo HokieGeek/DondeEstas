@@ -20,7 +20,7 @@ public class PersonBuilder {
             this.id = "";
             this.name = "";
             this.position = new Position(new Date(), 0.0, 0.0, 0.0);
-            this.visible = false;
+            this.visible = true;
             this.whitelist = new ArrayList<>();
             this.following = new ArrayList<>();
         }
