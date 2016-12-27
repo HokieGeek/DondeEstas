@@ -1,19 +1,25 @@
 package net.hokiegeek.android.dondeestas;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import net.hokiegeek.android.dondeestas.data.Person;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -69,8 +75,31 @@ public class PersonFragment extends Fragment {
         // Set the add button
         FloatingActionButton myFab = (FloatingActionButton) view.findViewById(R.id.fabAddFollowing);
         myFab.setOnClickListener(new View.OnClickListener() {
+            // Set the Edit text to use
+            final EditText followPerson = new EditText(context);
+
+            {
+                followPerson.setHint(R.string.dialog_request_following_text_hint);
+                followPerson.setMaxLines(1);
+            }
+
+            final AlertDialog dlg = new AlertDialog.Builder(context)
+                            .setTitle("Add a person")
+                            .setView(followPerson)
+                            .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    addFollowingListener.onFollowPeople(new ArrayList<>(Arrays.asList(followPerson.getText().toString())));
+                                    followPerson.setText("");
+                                }
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    followPerson.setText("");
+                                }
+                            }).create();
+
             public void onClick(View v) {
-                Toast.makeText(context, "TODO", Toast.LENGTH_SHORT).show(); // TODO
+                dlg.show();
             }
         });
 

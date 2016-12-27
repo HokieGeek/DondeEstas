@@ -51,9 +51,11 @@ public class Model {
         // This schedule a task to run every 10 seconds:
         scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
             public void run() {
-                Log.i(TAG, "Executor retrieving Following");
                 synchronized (user) {
-                    new GetFollowingTask().execute(user.getFollowing());
+                    if (user.getFollowing().size() > 0) {
+                        Log.i(TAG, "Executor retrieving Following");
+                        new GetFollowingTask().execute(user.getFollowing());
+                    }
                 }
             }
         }, 15, 10, TimeUnit.SECONDS); // TODO: make this configurable

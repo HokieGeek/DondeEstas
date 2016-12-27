@@ -97,10 +97,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     protected void initializeData(String dbServer, String userId) {
-        // Setup the data model
-        dataModel = new Model(); //new DbSource(dbServer), userId);
-        dataModel.addListener(this);
-        dataModel.initialize(new DbSource(dbServer), userId);
+        Log.v(TAG, "initializeData("+dbServer+", "+userId+")");
+        if (!"".equals(dbServer) && !"".equals(userId)) {
+            // Setup the data model
+            dataModel = new Model();
+            dataModel.addListener(this);
+            dataModel.initialize(new DbSource(dbServer), userId);
+        }
     }
 
     @Override
@@ -178,7 +181,7 @@ public class MainActivity extends AppCompatActivity
 
         this.updateFragments();
 
-        if (dataModel.getFollowing().size() == 1) {
+        if (dataModel != null && dataModel.getFollowing().size() == 1) {
             mapFragment.zoomToMarkers();
         }
     }

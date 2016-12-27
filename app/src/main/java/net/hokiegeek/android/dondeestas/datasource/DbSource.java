@@ -70,7 +70,7 @@ public class DbSource implements DataSource {
     public boolean updatePerson(Person p) {
         Log.v(TAG, "updatePerson()");
         Response resp = this.req(PATH_UPDATE_LOCATION, Util.PersonToJson(p));
-        return (resp.StatusCode == 200 || resp.StatusCode == 201);
+        return (resp.StatusCode == 200 || resp.StatusCode == 201); // TODO: is there a useful enum for this?
     }
 
     protected List<Person> getPersonListFromJson(JSONObject j) {
@@ -108,7 +108,6 @@ public class DbSource implements DataSource {
         Response resp = new Response();
         HttpURLConnection connection = null;
         try {
-            // URL url = new URL("http://requestb.in/18xm5rg1");//+PATH_SEP+path);
             URL url = new URL(this.url + PATH_SEP + path);
             Log.v(TAG, "URL = "+url.toString());
             connection = (HttpURLConnection) url.openConnection();
@@ -121,6 +120,7 @@ public class DbSource implements DataSource {
             osw.write(data.toString());
             osw.flush();
             osw.close();
+            Log.v(TAG, "data => "+data.toString());
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             StringBuilder result = new StringBuilder();

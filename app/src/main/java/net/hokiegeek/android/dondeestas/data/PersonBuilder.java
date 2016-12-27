@@ -84,7 +84,7 @@ public class PersonBuilder {
         }
 
         public PersonBuilder following(List<String> following) {
-            this.whitelist = following;
+            this.following = following;
             return this;
     }
 }
