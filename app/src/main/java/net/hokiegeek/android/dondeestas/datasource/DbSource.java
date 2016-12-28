@@ -60,8 +60,10 @@ public class DbSource implements DataSource {
         Log.v(TAG, "getPersonById()");
         List<Person> people = this.getPeopleByIdList(Arrays.asList(id));
         if (people.isEmpty()) {
+            Log.v(TAG, "getPersonById(): Did not find a person with ID: "+id);
             return null;
         } else {
+            Log.v(TAG, "getPersonById(): Found person with ID: "+id);
             return people.get(0);
         }
     }
