@@ -31,8 +31,6 @@ import java.util.List;
  */
 public class PersonFragment extends Fragment {
 
-    private static final String TAG = "DONDE";
-
     private OnListFragmentInteractionListener listListener;
 
     private OnAddFollowingListener addFollowingListener;
@@ -49,7 +47,7 @@ public class PersonFragment extends Fragment {
     }
 
     public static PersonFragment newInstance() {
-        Log.v(TAG, "PersonFragment.newInstance()");
+        Log.v(Util.TAG, "PersonFragment.newInstance()");
         return new PersonFragment();
     }
 
@@ -61,7 +59,7 @@ public class PersonFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.v(TAG, "PersonFragment.onCreateView()");
+        Log.v(Util.TAG, "PersonFragment.onCreateView()");
         View view = inflater.inflate(R.layout.fragment_person_list, container, false);
 
         final Context context = view.getContext();
@@ -111,7 +109,7 @@ public class PersonFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.v(TAG, "PersonFragment.onAttach()");
+        Log.v(Util.TAG, "PersonFragment.onAttach()");
 
         if (context instanceof OnListFragmentInteractionListener) {
             listListener = (OnListFragmentInteractionListener) context;
@@ -138,13 +136,13 @@ public class PersonFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.v(TAG, "PersonFragment.onDetach()");
+        Log.v(Util.TAG, "PersonFragment.onDetach()");
         listListener = null;
         addFollowingListener = null;
     }
 
     public void updateItems(List<Person> items) {
-        Log.v(TAG, "PersonFragment.updateItems()");
+        Log.v(Util.TAG, "PersonFragment.updateItems()");
         if (adapter != null) {
             adapter.updateItems(items);
         }

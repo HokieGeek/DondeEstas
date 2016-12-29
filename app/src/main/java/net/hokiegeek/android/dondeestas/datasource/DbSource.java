@@ -26,8 +26,6 @@ import java.util.List;
 
 public class DbSource implements DataSource {
 
-    private static final String TAG = "DONDE";
-
     private static final String PATH_SEP = "/";
     private static final String PATH_GET_PERSON = "person";
     private static final String PATH_UPDATE_LOCATION = "update";
@@ -40,11 +38,11 @@ public class DbSource implements DataSource {
 
     @Override
     public List<Person> getPeopleByIdList(List<String> ids) {
-        Log.v(TAG, "getPeopleByIdList()");
+        Log.v(Util.TAG, "getPeopleByIdList()");
         Response resp = this.req(PATH_GET_PERSON, createPersonDataRequest(ids));
         JSONObject json = null;
         if (resp.Body == null || "".equals(resp.Body)) {
-            Log.d(TAG, "getPeopleByIdList(): Body is empty!");
+            Log.d(Util.TAG, "getPeopleByIdList(): Body is empty!");
         } else {
             try {
                 json = new JSONObject(resp.Body);
@@ -57,20 +55,20 @@ public class DbSource implements DataSource {
 
     @Override
     public Person getPersonById(String id) {
-        Log.v(TAG, "getPersonById()");
+        Log.v(Util.TAG, "getPersonById()");
         List<Person> people = this.getPeopleByIdList(Arrays.asList(id));
         if (people.isEmpty()) {
-            Log.v(TAG, "getPersonById(): Did not find a person with ID: "+id);
+            Log.v(Util.TAG, "getPersonById(): Did not find a person with ID: "+id);
             return null;
         } else {
-            Log.v(TAG, "getPersonById(): Found person with ID: "+id);
+            Log.v(Util.TAG, "getPersonById(): Found person with ID: "+id);
             return people.get(0);
         }
     }
 
     @Override
     public boolean updatePerson(Person p) {
-        Log.v(TAG, "updatePerson()");
+        Log.v(Util.TAG, "updatePerson()");
         Response resp = this.req(PATH_UPDATE_LOCATION, Util.PersonToJson(p));
         return (resp.StatusCode == 200 || resp.StatusCode == 201); // TODO: is there a useful enum for this?
     }
@@ -111,7 +109,7 @@ public class DbSource implements DataSource {
         HttpURLConnection connection = null;
         try {
             URL url = new URL(this.url + PATH_SEP + path);
-            Log.v(TAG, "URL = "+url.toString());
+            Log.v(Util.TAG, "URL = "+url.toString());
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setDoOutput(true);
@@ -122,7 +120,7 @@ public class DbSource implements DataSource {
             osw.write(data.toString());
             osw.flush();
             osw.close();
-            Log.v(TAG, "data => "+data.toString());
+            Log.v(Util.TAG, "data => "+data.toString());
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             StringBuilder result = new StringBuilder();
@@ -135,17 +133,17 @@ public class DbSource implements DataSource {
             resp.StatusMessage = connection.getResponseMessage();
             resp.Body = result.toString();
 
-            Log.v(TAG, resp.Body);
-            Log.v(TAG, "STATUS: "+resp.StatusMessage);
+            Log.v(Util.TAG, resp.Body);
+            Log.v(Util.TAG, "STATUS: "+resp.StatusMessage);
         } catch (MalformedURLException e) {
-            Log.v(TAG, "ERROR: URL: "+this.url);
+            Log.v(Util.TAG, "ERROR: URL: "+this.url);
         } catch (IOException e) {
-            Log.v(TAG, "ERROR: IO: "+e.getMessage());
+            Log.v(Util.TAG, "ERROR: IO: "+e.getMessage());
             // e.printStackTrace();
         } catch (NullPointerException e) {
-            Log.v(TAG, "NPE: "+e.getMessage());
+            Log.v(Util.TAG, "NPE: "+e.getMessage());
         } catch (Exception e) {
-            Log.v(TAG, "Exception: "+e.getClass().getSimpleName());
+            Log.v(Util.TAG, "Exception: "+e.getClass().getSimpleName());
         } finally {
             if (connection != null) {
                 connection.disconnect();

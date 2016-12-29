@@ -39,8 +39,6 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences.OnSharedPreferenceChangeListener,
         LocationListener
 {
-    private static final String TAG = "DONDE";
-
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -97,7 +95,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     protected void initializeData(String dbServer, String userId) {
-        Log.v(TAG, "initializeData("+dbServer+", "+userId+")");
+        Log.v(Util.TAG, "initializeData("+dbServer+", "+userId+")");
         if (!"".equals(dbServer) && !"".equals(userId)) {
             // Setup the data model
             dataModel = new Model();
@@ -108,7 +106,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onStart() {
-        Log.v(TAG, "Activity.onStart()");
+        Log.v(Util.TAG, "Activity.onStart()");
         if (dataModel != null) {
             locationPublisher.enable(dataModel.getVisible());
             this.updateFragments();
@@ -118,7 +116,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onStop() {
-        Log.v(TAG, "Activity.onStop()");
+        Log.v(Util.TAG, "Activity.onStop()");
         locationPublisher.enable(false);
         super.onStop();
     }
@@ -134,7 +132,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.v(TAG, "Activity.onOptionsItemSelected()");
+        Log.v(Util.TAG, "Activity.onOptionsItemSelected()");
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
@@ -170,7 +168,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onFragmentLoaded(Fragment fragment) {
-        Log.v(TAG, "Activity.onFragmentLoaded()");
+        Log.v(Util.TAG, "Activity.onFragmentLoaded()");
 
         if (fragment instanceof MapFragment) {
             mapFragment = (MapFragment) fragment;
@@ -188,13 +186,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onDataUpdate() {
-        Log.v(TAG, "Activity.onDataUpdate()");
+        Log.v(Util.TAG, "Activity.onDataUpdate()");
         invalidateOptionsMenu();
         this.updateFragments();
     }
 
     private void updateFragments() {
-        Log.v(TAG, "Activity.updateFragments()");
+        Log.v(Util.TAG, "Activity.updateFragments()");
         if (mapFragment != null && dataModel != null) {
             mapFragment.updateMarkers(Util.PersonListToMarkerOptionList(dataModel.getFollowing()));
         }
@@ -206,13 +204,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(Person item) {
-        Log.v(TAG, "Activity.onListFragmentInteraction()");
+        Log.v(Util.TAG, "Activity.onListFragmentInteraction()");
         Toast.makeText(this, item.toString(), Toast.LENGTH_SHORT).show(); // TODO
     }
 
     @Override
     public void onFollowPeople(List<String> ids) {
-        Log.v(TAG, "Adding a person to follow");
+        Log.v(Util.TAG, "Adding a person to follow");
         if (dataModel != null) {
             List<String> toFollow = new ArrayList<>();
             toFollow.addAll(dataModel.getFollowingIds());
@@ -223,7 +221,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Log.v(TAG, "Activity.onSharedPreferencesChanged()");
+        Log.v(Util.TAG, "Activity.onSharedPreferencesChanged()");
         if (SettingsFragment.KEY_SERVER.equals(key) || SettingsFragment.KEY_USER_ID.equals(key)) {
             initializeData(sharedPreferences.getString(SettingsFragment.KEY_SERVER, ""), sharedPreferences.getString(SettingsFragment.KEY_USER_ID, ""));
         }
@@ -231,7 +229,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.v(TAG, "Location changed: "+location.toString());
+        Log.v(Util.TAG, "Location changed: "+location.toString());
+        Toast.makeText(this, location.toString(), Toast.LENGTH_SHORT).show(); // TODO
         if (dataModel != null) {
             dataModel.setPosition(Util.LocationToPosition(location));
         }

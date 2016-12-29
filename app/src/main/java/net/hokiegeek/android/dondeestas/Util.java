@@ -24,6 +24,8 @@ import java.util.Locale;
  */
 
 public final class Util {
+    public static final String TAG = "DONDE";
+
     public static final Position LocationToPosition(Location l) {
         if (l == null) {
             return new Position(new Date(), 0.0, 0.0, 0.0);

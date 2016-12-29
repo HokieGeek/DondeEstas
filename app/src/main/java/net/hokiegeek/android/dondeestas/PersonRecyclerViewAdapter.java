@@ -19,8 +19,6 @@ import java.util.List;
  * specified {@link OnListFragmentInteractionListener}.
  */
 public class PersonRecyclerViewAdapter extends RecyclerView.Adapter<PersonRecyclerViewAdapter.ViewHolder> {
-    private static final String TAG = "DONDE";
-
     private final List<Person> people;
 
     private final OnListFragmentInteractionListener listener;
@@ -59,7 +57,7 @@ public class PersonRecyclerViewAdapter extends RecyclerView.Adapter<PersonRecycl
     }
 
     public void updateItems(List<Person> items) {
-        Log.v(TAG, "PersonRecyclerViewAdapter.updateItems()");
+        Log.v(Util.TAG, "PersonRecyclerViewAdapter.updateItems()");
 
         int oldListSize = this.people.size();
         boolean removed = this.people.retainAll(items);

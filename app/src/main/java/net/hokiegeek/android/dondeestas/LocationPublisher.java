@@ -32,8 +32,6 @@ public class LocationPublisher
     GoogleApiClient.OnConnectionFailedListener,
     LocationListener
 {
-    private static final String TAG = "DONDE";
-
     private GoogleApiClient googleApiClient;
 
     private LocationRequest locationRequest;
@@ -82,7 +80,7 @@ public class LocationPublisher
     }
 
     public void enable(boolean enable) {
-        Log.v(TAG, "LocationPublisher.enable("+enable+")");
+        Log.v(Util.TAG, "LocationPublisher.enable("+enable+")");
         if (enable) {
             googleApiClient.connect();
         } else {
@@ -92,7 +90,7 @@ public class LocationPublisher
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        Log.v(TAG, "onConnected()");
+        Log.v(Util.TAG, "onConnected()");
         // TODO: Verify location settings
         /*
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
@@ -130,21 +128,21 @@ public class LocationPublisher
         */
 
         // if (requestingLocationUpdates) {
-            Log.v(TAG, "Have requested location updates");
+            Log.v(Util.TAG, "Have requested location updates");
             startLocationUpdates();
         // } else {
-        //     Log.v(TAG, "Not starting location updates");
+        //     Log.v(Util.TAG, "Not starting location updates");
         // }
     }
 
     protected void startLocationUpdates() {
-        Log.v(TAG, "Starting location updates");
+        Log.v(Util.TAG, "Starting location updates");
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            Log.v(TAG, "Starting location updates: have permissions");
+            Log.v(Util.TAG, "Starting location updates: have permissions");
             LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
         } else {
-            Log.v(TAG, "Starting location updates: do not have permissions");
+            Log.v(Util.TAG, "Starting location updates: do not have permissions");
             Toast.makeText(context, "Do not have permissions", Toast.LENGTH_SHORT).show();
         }
     }
@@ -152,13 +150,13 @@ public class LocationPublisher
     @Override
     public void onConnectionSuspended(int i) {
         // TODO: implement onConnectionSuspended?
-        Log.v(TAG, "onConnectionSuspended()");
+        Log.v(Util.TAG, "onConnectionSuspended()");
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         // TODO: implement onConnectionFailed?
-        Log.v(TAG, "onConnectionFailed()");
+        Log.v(Util.TAG, "onConnectionFailed()");
     }
 
     @Override

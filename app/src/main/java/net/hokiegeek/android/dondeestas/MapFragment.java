@@ -40,8 +40,6 @@ public class MapFragment extends Fragment
         implements OnMapReadyCallback,
                    ActivityCompat.OnRequestPermissionsResultCallback
 {
-    private static final String TAG = "DONDE";
-
     private MapView mapView;
 
     private GoogleMap map;
@@ -70,7 +68,7 @@ public class MapFragment extends Fragment
      * @return A new instance of fragment MapFragment.
      */
     public static MapFragment newInstance() {
-        Log.v(TAG, "MapFragment.newInstance()");
+        Log.v(Util.TAG, "MapFragment.newInstance()");
         MapFragment fragment = new MapFragment();
         return fragment;
     }
@@ -225,7 +223,7 @@ public class MapFragment extends Fragment
     }
 
     public void updateMarkers(List<MarkerOptions> markerOptions) {
-        Log.v(TAG, "updateMarkers()");
+        Log.v(Util.TAG, "updateMarkers()");
         if (!markerOptions.isEmpty()) {
             map.clear();
             markers.clear();
@@ -242,7 +240,7 @@ public class MapFragment extends Fragment
     }
 
     public void zoomToMarkers() {
-        Log.v(TAG, "zoomToMarkers()");
+        Log.v(Util.TAG, "zoomToMarkers()");
         if (!markers.isEmpty()) {
             CameraUpdate cu;
             if (markers.size() == 1) {
