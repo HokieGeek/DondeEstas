@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity
     protected void onStart() {
         Log.v(Util.TAG, "Activity.onStart()");
         if (dataModel != null) {
+            Log.v(Util.TAG, "Activity.onStart(): visible = "+dataModel.getVisible());
             locationPublisher.enable(dataModel.getVisible());
             this.updateFragments();
         }
@@ -118,14 +119,23 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         Log.v(Util.TAG, "Activity.onStop()");
-        locationPublisher.enable(false);
+        // locationPublisher.enable(false); // TODO: only call this on shutdown
         super.onStop();
     }
 
     @Override
+    protected void onDestroy() {
+        Log.v(Util.TAG, "Activity.onDestroy()");
+        locationPublisher.enable(false);
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.v(Util.TAG, "Activity.onCreateOptionsMenu()");
         getMenuInflater().inflate(R.menu.menu_main, menu);
         if (dataModel != null) {
+            locationPublisher.enable(dataModel.getVisible());
             setVisibilityIcon(dataModel.getVisible(), menu.findItem(R.id.action_visibility));
         }
         return true;
@@ -188,6 +198,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onDataUpdate() {
         Log.v(Util.TAG, "Activity.onDataUpdate()");
+        if (dataModel != null) {
+            locationPublisher.enable(dataModel.getVisible());
+        }
         invalidateOptionsMenu();
         this.updateFragments();
     }
@@ -231,7 +244,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onLocationChanged(Location location) {
         Log.v(Util.TAG, "Location changed: "+location.toString());
-        Toast.makeText(this, location.toString(), Toast.LENGTH_SHORT).show(); // TODO
+        // Toast.makeText(this, location.toString(), Toast.LENGTH_SHORT).show(); // TODO
         if (dataModel != null) {
             dataModel.setPosition(Util.LocationToPosition(location));
         }

@@ -29,13 +29,9 @@ import java.util.List;
  * Created by andres on 11/29/16.
  */
 
-public class LocationPublisher // extends Service
+public class LocationPublisher extends Service
 {
-    private GoogleApiClient googleApiClient;
-
-    private LocationRequest locationRequest;
-
-    private Context context;
+    private static final String TAG = "DONDE-LOC";
 
     private List<LocationListener> listeners;
 
@@ -76,28 +72,11 @@ public class LocationPublisher // extends Service
                 googleApiClient.disconnect();
             }
         }
-        return false;
-    }
 
-    private void fireOnLocationChanged(Location loc) {
-        for (LocationListener l : listeners) {
-            l.onLocationChanged(loc);
-        }
-    }
-
-    public void enable(boolean enable) {
-        Log.v(Util.TAG, "LocationPublisher.enable("+enable+")");
-        if (enable) {
-            googleApiClient.connect();
-        } else {
-            googleApiClient.disconnect();
-        }
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        Log.v(Util.TAG, "onConnected()");
-        // TODO: Verify location settings
+        @Override
+        public void onConnected(@Nullable Bundle bundle) {
+            Log.v(TAG, "onConnected()");
+            // TODO: Verify location settings
         /*
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
         PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
@@ -133,35 +112,35 @@ public class LocationPublisher // extends Service
         });
         */
 
-        // if (requestingLocationUpdates) {
-            Log.v(Util.TAG, "Have requested location updates");
+            // if (requestingLocationUpdates) {
+            Log.v(TAG, "Have requested location updates");
             startLocationUpdates();
-        // } else {
-        //     Log.v(Util.TAG, "Not starting location updates");
-        // }
-    }
-
-    protected void startLocationUpdates() {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            Log.v(Util.TAG, "Starting location updates: have permissions");
-            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
-        } else {
-            Log.e(Util.TAG, "Starting location updates: do not have permissions");
-            Toast.makeText(context, "Do not have permissions", Toast.LENGTH_SHORT).show();
+            // } else {
+            //     Log.v(TAG, "Not starting location updates");
+            // }
         }
-    }
 
-    @Override
-    public void onConnectionSuspended(int i) {
-        // TODO: implement onConnectionSuspended?
-            Log.v(Util.TAG, "onConnectionSuspended()");
+        void startLocationUpdates() {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.v(TAG, "Starting location updates: have permissions");
+                LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
+            } else {
+                Log.e(TAG, "Starting location updates: do not have permissions");
+                Toast.makeText(context, "Do not have permissions", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onConnectionSuspended(int i) {
+            // TODO: implement onConnectionSuspended?
+            Log.v(TAG, "onConnectionSuspended()");
         }
 
         @Override
         public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
             // TODO: implement onConnectionFailed?
-            Log.v(Util.TAG, "onConnectionFailed()");
+            Log.v(TAG, "onConnectionFailed()");
         }
 
         @Override
@@ -197,9 +176,10 @@ public class LocationPublisher // extends Service
     }
 
     private void fireOnLocationChanged(Location loc) {
+        Log.v(TAG, "fireOnLocationchanged()");
         for (LocationListener l : listeners) {
             l.onLocationChanged(loc);
-        Log.v(Util.TAG, "onConnectionSuspended()");
+        }
     }
 
     public void enable(boolean enable) {
@@ -208,7 +188,6 @@ public class LocationPublisher // extends Service
         }
     }
 
-    /*
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -217,13 +196,13 @@ public class LocationPublisher // extends Service
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.v(TAG, "onStartCommand()");
         context = getApplicationContext();
-        this.addListener(context);
+        this.addListener((LocationListener)context); // TODO: ?
 
         tracker = new LocationTracker();
 
         super.onStartCommand(intent, flags, startId);
         return START_STICKY;
     }
-    */
 }
