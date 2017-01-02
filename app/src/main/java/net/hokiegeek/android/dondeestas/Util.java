@@ -119,7 +119,7 @@ public final class Util {
     }
 
     public static final MarkerOptions PersonToMarkerOption(Person p) {
-        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss XXX");
         return new MarkerOptions().position(PositionToLatLng(p.getPosition()))
                     .title(p.getName())
                     .snippet(fmt.format(p.getPosition().tov))

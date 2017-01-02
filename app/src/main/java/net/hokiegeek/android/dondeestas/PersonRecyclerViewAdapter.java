@@ -11,6 +11,7 @@ import net.hokiegeek.android.dondeestas.PersonFragment.OnListFragmentInteraction
 import net.hokiegeek.android.dondeestas.data.Person;
 // import net.hokiegeek.android.dondeestas.dummy.DummyContent.Person;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +40,9 @@ public class PersonRecyclerViewAdapter extends RecyclerView.Adapter<PersonRecycl
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = people.get(position);
         holder.mIdView.setText(people.get(position).getId());
-        // holder.mContentView.setText(people.get(position).content);
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss XXX");
+        String timestamp = fmt.format(people.get(position).getPosition().tov);
+        holder.mTimestampView.setText(timestamp);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,21 +83,14 @@ public class PersonRecyclerViewAdapter extends RecyclerView.Adapter<PersonRecycl
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mIdView;
-        // public final TextView mContentView;
+        public final TextView mTimestampView;
         public Person mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
             mIdView = (TextView) view.findViewById(R.id.id);
-            // mContentView = (TextView) view.findViewById(R.id.content);
+            mTimestampView = (TextView) view.findViewById(R.id.timestamp);
         }
-
-        /*
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
-        }
-        */
     }
 }

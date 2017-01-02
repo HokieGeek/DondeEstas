@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link MapFragment.OnFragmentLoadedListener} interface
+ * {@link OnFragmentLoadedListener} interface
  * to handle interaction events.
  * Use the {@link MapFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -128,7 +128,7 @@ public class MapFragment extends Fragment
             // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
             MapsInitializer.initialize(this.getActivity());
 
-            this.map.getUiSettings().setMapToolbarEnabled(false); // TODO: Would be better to relocate them
+            // this.map.getUiSettings().setMapToolbarEnabled(false); // TODO: Would be better to relocate them
 
             mLoadedListener.onFragmentLoaded(this);
         } catch (SecurityException e) {
@@ -232,10 +232,21 @@ public class MapFragment extends Fragment
             }
         }
 
+        /*
         if (markerOptions.isEmpty()) {
             fabGather.setVisibility(View.INVISIBLE);
         } else {
             fabGather.setVisibility(View.VISIBLE);
+        }
+        */
+    }
+
+    public void centerOnMarker(String id) {
+        for (Marker mark : markers) {
+            if (id.equals(mark.getTitle())) {
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(mark.getPosition(), 12));
+                return;
+            }
         }
     }
 

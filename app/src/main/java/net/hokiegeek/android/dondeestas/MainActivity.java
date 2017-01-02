@@ -219,7 +219,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(Person item) {
         Log.v(Util.TAG, "Activity.onListFragmentInteraction()");
-        Toast.makeText(this, item.toString(), Toast.LENGTH_SHORT).show(); // TODO
+        if (mapFragment != null) {
+            mapFragment.centerOnMarker(item.getId());
+            mViewPager.setCurrentItem(SectionsPagerAdapter.MAP_POSITION);
+        }
     }
 
     @Override
@@ -256,13 +259,16 @@ public class MainActivity extends AppCompatActivity
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
+        public static final int MAP_POSITION = 0;
+        public static final int FOLLOWING_POSITION = 1;
+
         public SectionsPagerAdapter(FragmentManager fm) { super(fm); }
 
         @Override
         public Fragment getItem(int position) {
             switch (position) {
-                case 0: return MapFragment.newInstance();
-                case 1: return PersonFragment.newInstance();
+                case MAP_POSITION: return MapFragment.newInstance();
+                case FOLLOWING_POSITION: return PersonFragment.newInstance();
             }
             return null;
         }
@@ -273,8 +279,8 @@ public class MainActivity extends AppCompatActivity
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
-                case 0: return getString(R.string.tab_name_map);
-                case 1: return getString(R.string.tab_name_following);
+                case MAP_POSITION: return getString(R.string.tab_name_map);
+                case FOLLOWING_POSITION: return getString(R.string.tab_name_following);
             }
             return null;
         }
