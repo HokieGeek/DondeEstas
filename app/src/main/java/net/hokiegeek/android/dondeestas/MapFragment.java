@@ -68,7 +68,6 @@ public class MapFragment extends Fragment
      * @return A new instance of fragment MapFragment.
      */
     public static MapFragment newInstance() {
-        Log.v(Util.TAG, "MapFragment.newInstance()");
         MapFragment fragment = new MapFragment();
         return fragment;
     }
@@ -223,7 +222,6 @@ public class MapFragment extends Fragment
     }
 
     public void updateMarkers(List<MarkerOptions> markerOptions) {
-        Log.v(Util.TAG, "updateMarkers()");
         if (!markerOptions.isEmpty()) {
             map.clear();
             markers.clear();
@@ -242,16 +240,17 @@ public class MapFragment extends Fragment
     }
 
     public void centerOnMarker(String id) {
+        Log.v(Util.TAG, "centerOnMarker()");
         for (Marker mark : markers) {
             if (id.equals(mark.getTitle())) {
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(mark.getPosition(), 12));
                 return;
             }
         }
+        Log.v(Util.TAG, "centerOnMarker(): WTF: "+id);
     }
 
     public void zoomToMarkers() {
-        Log.v(Util.TAG, "zoomToMarkers()");
         if (!markers.isEmpty()) {
             CameraUpdate cu;
             if (markers.size() == 1) {

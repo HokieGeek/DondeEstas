@@ -31,8 +31,6 @@ import java.util.List;
 
 public class LocationPublisher extends Service
 {
-    private static final String TAG = "DONDE-LOC";
-
     private List<LocationListener> listeners;
 
     private LocationTracker tracker;
@@ -65,7 +63,7 @@ public class LocationPublisher extends Service
         }
 
         void enable(boolean enable) {
-            Log.v(TAG, "LocationTracker.enable("+enable+")");
+            Log.v(Util.TAG, "LocationTracker.enable("+enable+")");
             if (enable) {
                 googleApiClient.connect();
             } else {
@@ -75,7 +73,6 @@ public class LocationPublisher extends Service
 
         @Override
         public void onConnected(@Nullable Bundle bundle) {
-            Log.v(TAG, "onConnected()");
             // TODO: Verify location settings
         /*
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
@@ -113,7 +110,7 @@ public class LocationPublisher extends Service
         */
 
             // if (requestingLocationUpdates) {
-            Log.v(TAG, "Have requested location updates");
+            Log.v(Util.TAG, "Have requested location updates");
             startLocationUpdates();
             // } else {
             //     Log.v(TAG, "Not starting location updates");
@@ -123,10 +120,10 @@ public class LocationPublisher extends Service
         void startLocationUpdates() {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
-                Log.v(TAG, "Starting location updates: have permissions");
+                Log.v(Util.TAG, "Starting location updates: have permissions");
                 LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
             } else {
-                Log.e(TAG, "Starting location updates: do not have permissions");
+                Log.e(Util.TAG, "Starting location updates: do not have permissions");
                 Toast.makeText(context, "Do not have permissions", Toast.LENGTH_SHORT).show();
             }
         }
@@ -134,13 +131,11 @@ public class LocationPublisher extends Service
         @Override
         public void onConnectionSuspended(int i) {
             // TODO: implement onConnectionSuspended?
-            Log.v(TAG, "onConnectionSuspended()");
         }
 
         @Override
         public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
             // TODO: implement onConnectionFailed?
-            Log.v(TAG, "onConnectionFailed()");
         }
 
         @Override
@@ -176,7 +171,6 @@ public class LocationPublisher extends Service
     }
 
     private void fireOnLocationChanged(Location loc) {
-        Log.v(TAG, "fireOnLocationchanged()");
         for (LocationListener l : listeners) {
             l.onLocationChanged(loc);
         }
@@ -196,7 +190,6 @@ public class LocationPublisher extends Service
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.v(TAG, "onStartCommand()");
         context = getApplicationContext();
         this.addListener((LocationListener)context); // TODO: ?
 

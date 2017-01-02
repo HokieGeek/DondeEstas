@@ -107,7 +107,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onStart() {
-        Log.v(Util.TAG, "Activity.onStart()");
         if (dataModel != null) {
             Log.v(Util.TAG, "Activity.onStart(): visible = "+dataModel.getVisible());
             locationPublisher.enable(dataModel.getVisible());
@@ -118,21 +117,19 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onStop() {
-        Log.v(Util.TAG, "Activity.onStop()");
-        // locationPublisher.enable(false); // TODO: only call this on shutdown
+        // TODO: remove?
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
-        Log.v(Util.TAG, "Activity.onDestroy()");
+        // TODO: confirm this
         locationPublisher.enable(false);
         super.onDestroy();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.v(Util.TAG, "Activity.onCreateOptionsMenu()");
         getMenuInflater().inflate(R.menu.menu_main, menu);
         if (dataModel != null) {
             locationPublisher.enable(dataModel.getVisible());
@@ -143,7 +140,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.v(Util.TAG, "Activity.onOptionsItemSelected()");
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
@@ -179,8 +175,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onFragmentLoaded(Fragment fragment) {
-        Log.v(Util.TAG, "Activity.onFragmentLoaded()");
-
         if (fragment instanceof MapFragment) {
             mapFragment = (MapFragment) fragment;
         }
@@ -197,7 +191,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onDataUpdate() {
-        Log.v(Util.TAG, "Activity.onDataUpdate()");
         if (dataModel != null) {
             locationPublisher.enable(dataModel.getVisible());
         }
@@ -206,7 +199,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void updateFragments() {
-        Log.v(Util.TAG, "Activity.updateFragments()");
         if (mapFragment != null && dataModel != null) {
             mapFragment.updateMarkers(Util.PersonListToMarkerOptionList(dataModel.getFollowing()));
         }
@@ -218,7 +210,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(Person item) {
-        Log.v(Util.TAG, "Activity.onListFragmentInteraction()");
+        Log.v(Util.TAG, "Activity.onListFragmentInteraction(): "+item.toString());
         if (mapFragment != null) {
             mapFragment.centerOnMarker(item.getId());
             mViewPager.setCurrentItem(SectionsPagerAdapter.MAP_POSITION);
@@ -227,7 +219,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onFollowPeople(List<String> ids) {
-        Log.v(Util.TAG, "Adding a person to follow");
         if (dataModel != null) {
             List<String> toFollow = new ArrayList<>();
             toFollow.addAll(dataModel.getFollowingIds());
@@ -238,7 +229,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Log.v(Util.TAG, "Activity.onSharedPreferencesChanged()");
         if (SettingsFragment.KEY_SERVER.equals(key) || SettingsFragment.KEY_USER_ID.equals(key)) {
             initializeData(sharedPreferences.getString(SettingsFragment.KEY_SERVER, ""), sharedPreferences.getString(SettingsFragment.KEY_USER_ID, ""));
         }
@@ -246,8 +236,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.v(Util.TAG, "Location changed: "+location.toString());
-        // Toast.makeText(this, location.toString(), Toast.LENGTH_SHORT).show(); // TODO
+        // Log.v(Util.TAG, "Location changed: "+location.toString());
         if (dataModel != null) {
             dataModel.setPosition(Util.LocationToPosition(location));
         }

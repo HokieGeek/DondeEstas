@@ -47,7 +47,6 @@ public class PersonFragment extends Fragment {
     }
 
     public static PersonFragment newInstance() {
-        Log.v(Util.TAG, "PersonFragment.newInstance()");
         return new PersonFragment();
     }
 
@@ -59,7 +58,6 @@ public class PersonFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.v(Util.TAG, "PersonFragment.onCreateView()");
         View view = inflater.inflate(R.layout.fragment_person_list, container, false);
 
         final Context context = view.getContext();
@@ -109,7 +107,6 @@ public class PersonFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.v(Util.TAG, "PersonFragment.onAttach()");
 
         if (context instanceof OnListFragmentInteractionListener) {
             listListener = (OnListFragmentInteractionListener) context;
@@ -136,13 +133,11 @@ public class PersonFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.v(Util.TAG, "PersonFragment.onDetach()");
         listListener = null;
         addFollowingListener = null;
     }
 
     public void updateItems(List<Person> items) {
-        Log.v(Util.TAG, "PersonFragment.updateItems()");
         if (adapter != null) {
             adapter.updateItems(items);
         }

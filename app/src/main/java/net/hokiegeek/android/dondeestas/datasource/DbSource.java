@@ -38,10 +38,10 @@ public class DbSource implements DataSource {
 
     @Override
     public List<Person> getPeopleByIdList(List<String> ids) {
-        Log.v(Util.TAG, "getPeopleByIdList()");
         Response resp = this.req(PATH_GET_PERSON, createPersonDataRequest(ids));
         JSONObject json = null;
         if (resp.Body == null || "".equals(resp.Body)) {
+            // TODO: Change this if
             Log.d(Util.TAG, "getPeopleByIdList(): Body is empty!");
         } else {
             try {
@@ -55,7 +55,6 @@ public class DbSource implements DataSource {
 
     @Override
     public Person getPersonById(String id) {
-        Log.v(Util.TAG, "getPersonById()");
         List<Person> people = this.getPeopleByIdList(Arrays.asList(id));
         if (people.isEmpty()) {
             Log.v(Util.TAG, "getPersonById(): Did not find a person with ID: "+id);
@@ -68,7 +67,6 @@ public class DbSource implements DataSource {
 
     @Override
     public boolean updatePerson(Person p) {
-        Log.v(Util.TAG, "updatePerson()");
         Response resp = this.req(PATH_UPDATE_LOCATION, Util.PersonToJson(p));
         return (resp.StatusCode == 200 || resp.StatusCode == 201); // TODO: is there a useful enum for this?
     }
@@ -109,7 +107,6 @@ public class DbSource implements DataSource {
         HttpURLConnection connection = null;
         try {
             URL url = new URL(this.url + PATH_SEP + path);
-            Log.v(Util.TAG, "URL = "+url.toString());
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setDoOutput(true);
@@ -120,7 +117,6 @@ public class DbSource implements DataSource {
             osw.write(data.toString());
             osw.flush();
             osw.close();
-            Log.v(Util.TAG, "data => "+data.toString());
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             StringBuilder result = new StringBuilder();
@@ -132,18 +128,15 @@ public class DbSource implements DataSource {
             resp.StatusCode = connection.getResponseCode();
             resp.StatusMessage = connection.getResponseMessage();
             resp.Body = result.toString();
-
-            Log.v(Util.TAG, resp.Body);
-            Log.v(Util.TAG, "STATUS: "+resp.StatusMessage);
         } catch (MalformedURLException e) {
-            Log.v(Util.TAG, "ERROR: URL: "+this.url);
+            Log.e(Util.TAG, "ERROR: URL: "+this.url);
         } catch (IOException e) {
-            Log.v(Util.TAG, "ERROR: IO: "+e.getMessage());
+            Log.e(Util.TAG, "ERROR: IO: "+e.getMessage());
             // e.printStackTrace();
         } catch (NullPointerException e) {
-            Log.v(Util.TAG, "NPE: "+e.getMessage());
+            Log.e(Util.TAG, "NPE: "+e.getMessage());
         } catch (Exception e) {
-            Log.v(Util.TAG, "Exception: "+e.getClass().getSimpleName());
+            Log.e(Util.TAG, "Exception: "+e.getClass().getSimpleName());
         } finally {
             if (connection != null) {
                 connection.disconnect();

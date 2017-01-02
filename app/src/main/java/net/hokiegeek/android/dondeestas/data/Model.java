@@ -43,7 +43,6 @@ public class Model {
     }
 
     public void initialize(DataSource source, String userId) {
-        Log.v(Util.TAG, "Model.initialize()");
         dataSource = source;
         new GetUserTask().execute(userId);
 
@@ -52,7 +51,6 @@ public class Model {
             public void run() {
                 synchronized (user) {
                     if (user.getFollowing().size() > 0) {
-                        Log.i(Util.TAG, "Executor retrieving Following");
                         new GetFollowingTask().execute(user.getFollowing());
                     }
                 }
@@ -131,12 +129,10 @@ public class Model {
     }
 
     private void updateUser(Person p) {
-        Log.v(Util.TAG, "Model.updateUser()");
         new PersonUpdateTask().execute(p.clone());
     }
 
     private void setUser(Person p) {
-        Log.v(Util.TAG, "Model.setUser()");
         // This is awkward
         if (user == null) {
             user = p.clone();
@@ -166,7 +162,6 @@ public class Model {
     }
 
     public void setPosition(Position p) {
-        Log.v(Util.TAG, "Model.setPosition(): "+p.toString());
         if (user != null) {
             PersonBuilder params = user.params.clone();
             params.position(p.clone());
@@ -175,9 +170,7 @@ public class Model {
     }
 
     public void setVisible(Boolean v) {
-        Log.v(Util.TAG, "Model.setVisible()");
         if (user != null) {
-            Log.v(Util.TAG, "Model.setVisible(): HERE");
             PersonBuilder params = user.params.clone();
             params.visible(v);
             updateUser(params.build());
@@ -221,18 +214,14 @@ public class Model {
 
         @Override
         protected Boolean doInBackground(Person... params) {
-            Log.v(Util.TAG, "PersonUpdateTask.doInBackground()");
             p = params[0];
             return dataSource.updatePerson(p);
         }
 
         @Override
         protected void onPostExecute(Boolean updated) {
-            Log.v(Util.TAG, "PersonUpdateTask.onPostExecute()");
             if (updated) {
                 setUser(this.p);
-            } else {
-                Log.d(Util.TAG, "PersonUpdateTask.onPostExecute(): User was not updated");
             }
             super.onPostExecute(updated);
         }
@@ -242,19 +231,15 @@ public class Model {
         private String requestedId;
         @Override
         protected Person doInBackground(String... params) {
-            Log.v(Util.TAG, "GetUserTask.doInBackground()");
             requestedId = params[0];
             return dataSource.getPersonById(requestedId);
         }
 
         @Override
         protected void onPostExecute(Person person) {
-            Log.v(Util.TAG, "GetUserTask.onPostExecute()");
             if (person != null) {
-                Log.v(Util.TAG, "GetUserTask.onPostExecute(): Retrieved existing");
                 setUser(person);
             } else {
-                Log.v(Util.TAG, "GetUserTask.onPostExecute(): Creating a new Person");
                 new PersonUpdateTask().execute(new PersonBuilder().id(requestedId).build());
             }
             super.onPostExecute(person);
@@ -264,7 +249,6 @@ public class Model {
     private class GetPeopleTask extends AsyncTask<List<String>, Void, List<Person>> {
         @Override
         protected List<Person> doInBackground(List<String>... params) {
-            Log.v(Util.TAG, "GetPeopleTask.doInBackground()");
             return dataSource.getPeopleByIdList(params[0]);
         }
 
@@ -288,7 +272,6 @@ public class Model {
     private class GetFollowingTask extends GetPeopleTask {
         @Override
         protected void onPostExecute(List<Person> persons) {
-            Log.v(Util.TAG, "GetFollowingTask.onPostExecute()");
             synchronized (following) {
                 following = persons;
             }
