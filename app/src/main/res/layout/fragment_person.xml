@@ -25,11 +25,15 @@
         android:layout_alignParentLeft="true"
         android:textSize="12sp" />
 
-    <!--ToggleButton
-        android:text="Track"
+    <!--ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:srcCompat="@android:drawable/ic_menu_compass"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:id="@+id/trackBtn" /-->
+        android:id="@+id/trackBtn"
+        android:backgroundTint="@android:color/black"
+        android:foregroundTint="@color/colorAccent" /-->
+
+    <!--app:srcCompat="@drawable/ic_maps_marker_person"-->
 </RelativeLayout>
