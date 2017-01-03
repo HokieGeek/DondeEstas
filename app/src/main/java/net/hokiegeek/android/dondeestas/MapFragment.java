@@ -229,25 +229,15 @@ public class MapFragment extends Fragment
                 markers.add(map.addMarker(mark));
             }
         }
-
-        /*
-        if (markerOptions.isEmpty()) {
-            fabGather.setVisibility(View.INVISIBLE);
-        } else {
-            fabGather.setVisibility(View.VISIBLE);
-        }
-        */
     }
 
     public void centerOnMarker(String id) {
-        Log.v(Util.TAG, "centerOnMarker()");
         for (Marker mark : markers) {
             if (id.equals(mark.getTitle())) {
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(mark.getPosition(), 12));
                 return;
             }
         }
-        Log.v(Util.TAG, "centerOnMarker(): WTF: "+id);
     }
 
     public void zoomToMarkers() {
