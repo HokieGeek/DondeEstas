@@ -22,18 +22,11 @@
             </intent-filter>
         </activity>
 
-        <!-- DEBUG
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDE56fBNnq5afUMT2W5Cb4izbWQbZ3XfSo" />
-        -->
-
-        <!-- RELEASE -->
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAd_eTjL7kAMLhh7gjMPIZd13TV5_o8SOc" />
-
         <activity android:name=".SettingsActivity" />
         <service android:name=".LocationPublisher" android:process=":location_publisher_service" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDGCqjwZ0j8QArMo3CEY8_soV9FX8hgoBk" />
     </application>
 </manifest>
